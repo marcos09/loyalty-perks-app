@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -13,5 +16,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     backgroundColor: 'rgba(127,127,127,0.2)',
+  },
+  scrollContent: {
+    paddingBottom: 24,
   },
 });

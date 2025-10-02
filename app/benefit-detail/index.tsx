@@ -17,7 +17,7 @@ export default function BenefitDetailScreen() {
   const { benefit, loading, error, refetch } = useBenefitDetail();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <Stack.Screen
         options={{
           title: benefit?.title ?? t('benefits.benefit'),
@@ -36,7 +36,7 @@ export default function BenefitDetailScreen() {
           </Pressable>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
           <BenefitDetailHeader benefit={benefit} />
           <BenefitDetailSections benefit={benefit} />
         </ScrollView>

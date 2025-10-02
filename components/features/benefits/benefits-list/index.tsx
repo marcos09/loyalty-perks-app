@@ -7,10 +7,7 @@ import { BenefitCard } from "../benefit-card";
 import { EmptyState } from "../empty-state";
 import { LoadingSkeleton } from "../loading-skeleton";
 import { styles } from "./styles";
-
-interface BenefitsListProps {
-  onClearFilters: () => void;
-}
+import type { BenefitsListProps } from "./types";
 
 export function BenefitsList({ onClearFilters }: BenefitsListProps) {
   const { benefits, hasAppliedFilters, loading, loadingMore, loadMore } =
@@ -42,13 +39,13 @@ function LoadingMoreSkeleton() {
   return (
     <Container gap={12} padding="medium">
       {Array.from({ length: 3 }).map((_, i) => (
-        <Card key={i} variant="default" padding="medium">
-          <Container direction="row" gap={12} align="center">
+        <Card key={i} variant="default" padding="medium" style={{ width: '100%' }}>
+          <Container direction="row" gap={12} align="center" style={{ width: '100%' }}>
             <Skeleton width={76} height={76} radius={12} />
             <Container style={{ flex: 1 }} gap={6}>
-              <Skeleton width="80%" height={16} />
-              <Skeleton width="95%" height={12} />
-              <Skeleton width="60%" height={12} />
+              <Skeleton width="100%" height={16} />
+              <Skeleton width="100%" height={12} />
+              <Skeleton width="100%" height={12} />
             </Container>
           </Container>
         </Card>
