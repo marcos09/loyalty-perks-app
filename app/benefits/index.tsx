@@ -1,12 +1,12 @@
 import { FiltersModal } from "@/components/features/filters/filters-modal";
 import { FiltersState } from "@/components/features/filters/filters-state";
-import { BenefitsHeader } from "@/components/screens/benefits/header";
 import { ErrorState } from "@/components/screens/error/error-state";
 import { useBenefitsData } from "@/hooks/use-benefits-data";
 import { useFilterActions } from "@/hooks/use-filter-actions";
 import { analyzeApiError } from "@/utils/error-handler";
 import { useState } from "react";
 import { BenefitsList } from "./components/benefits-list";
+import { BenefitsHeader } from "./components/header";
 import { LoadingSkeleton } from "./components/loading-skeleton";
 
 export default function BenefitsScreenPage() {
