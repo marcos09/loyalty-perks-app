@@ -1,10 +1,9 @@
-import { API_BASE_URL } from '@/config/api';
 import type { BenefitsResponse, CategoriesResponse, Category, FilterState } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-// Simple API client with delay for testing loading states
+export const API_BASE_URL = "http://localhost:3000"
+
 async function apiRequest<T>(endpoint: string): Promise<T> {
-  // Add a 1.5 second delay to see loading states (remove in production)
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
@@ -22,7 +21,6 @@ async function apiRequest<T>(endpoint: string): Promise<T> {
   return result;
 }
 
-// Build query string from filters
 function buildQueryString(filters: FilterState, page: number = 1, limit: number = 20): string {
   const params = new URLSearchParams();
   
@@ -38,7 +36,6 @@ function buildQueryString(filters: FilterState, page: number = 1, limit: number 
   return params.toString();
 }
 
-// Fetch benefits with filters and pagination
 async function fetchBenefits(filters: FilterState, page: number = 1, limit: number = 20): Promise<BenefitsResponse> {
   const queryString = buildQueryString(filters, page, limit);
   const endpoint = queryString ? `/api/benefits?${queryString}` : '/api/benefits';
@@ -47,13 +44,11 @@ async function fetchBenefits(filters: FilterState, page: number = 1, limit: numb
   return response;
 }
 
-// Fetch categories
 async function fetchCategories(): Promise<Category[]> {
   const response = await apiRequest<CategoriesResponse>('/api/benefits/categories');
   return response.data;
 }
 
-// Hook for benefits with filters and infinite scrolling
 export function useBenefits(filters: FilterState) {
   return useInfiniteQuery({
     queryKey: ['benefits', filters],
@@ -63,15 +58,14 @@ export function useBenefits(filters: FilterState) {
       const totalLoaded = allPages.reduce((acc, page) => acc + page.data.length, 0);
       return totalLoaded < lastPage.total ? allPages.length + 1 : undefined;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 }
 
-// Hook for categories
 export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
-    staleTime: 10 * 60 * 1000, // 10 minutes - categories change less frequently
+    staleTime: 10 * 60 * 1000,
   });
 }

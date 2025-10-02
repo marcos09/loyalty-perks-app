@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   safeArea: {
@@ -17,6 +17,6 @@ export const styles = StyleSheet.create({
   },
   footer: {
     marginTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 16, // Extra padding for home indicator
+    paddingBottom: Platform.OS === 'ios' ? 34 : 16,
   },
 });

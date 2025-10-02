@@ -6,7 +6,6 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   
-  // Variants
   default: {
     backgroundColor: 'rgba(0,0,0,0.04)',
   },
@@ -27,7 +26,6 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(127,127,127,0.2)',
   },
   
-  // Padding variants
   paddingNone: {},
   paddingSmall: {
     padding: 8,

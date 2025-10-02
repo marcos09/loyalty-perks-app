@@ -63,11 +63,9 @@ export function useFilterActions() {
   }, [resetDraftToApplied]);
 
   return {
-    // State
     appliedFilters,
     draftFilters,
     
-    // Actions
     handleSearchChange,
     handleSearchApply,
     handleCategoryChange,
@@ -78,8 +76,7 @@ export function useFilterActions() {
     handleApplyFilters,
     handleClearFilters,
     handleResetDraft,
-    
-    // Direct context functions
+
     applyFilters,
     clearFilters,
     resetDraftToApplied,

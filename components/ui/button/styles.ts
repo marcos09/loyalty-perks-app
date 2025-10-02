@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   
-  // Variants
   primary: {
     backgroundColor: 'rgba(0,0,0,0.12)',
     borderWidth: 1,
@@ -28,7 +27,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   
-  // Sizes
   small: {
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -42,12 +40,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   
-  // States
   disabled: {
     opacity: 0.5,
   },
   
-  // Text styles
   text: {
     fontWeight: '600',
   },

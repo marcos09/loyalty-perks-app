@@ -6,14 +6,11 @@ import { styles } from './styles';
 export function BenefitDetailLoading() {
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-      {/* Header Loading */}
       <View style={styles.headerImageWrapper}>
         <View style={styles.heroContainer}>
           <Skeleton width={'100%'} height={'100%'} radius={16} />
         </View>
       </View>
-
-      {/* Content Loading */}
       <View style={[styles.section, { paddingTop: 14 }]}> 
         <Skeleton width={'70%'} height={22} />
         <Skeleton width={100} height={14} style={{ marginTop: 6 }} />

@@ -1,11 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  base: {
-    // Base styles are applied via style prop
-  },
+  base: {},
   
-  // Padding variants
   paddingNone: {},
   paddingSmall: {
     padding: 8,
@@ -17,7 +14,6 @@ export const styles = StyleSheet.create({
     padding: 24,
   },
   
-  // Margin variants
   marginNone: {},
   marginSmall: {
     margin: 8,

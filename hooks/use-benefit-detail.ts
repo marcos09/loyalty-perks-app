@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 
-import { API_BASE_URL } from '@/config/api';
 import type { Benefit } from '@/types';
+import { API_BASE_URL } from './api';
 
 async function fetchBenefit(id: string): Promise<Benefit> {
-  // Add a 1.5 second delay to see loading states (remove in production)
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   const response = await fetch(`${API_BASE_URL}/api/benefits/${id}`);

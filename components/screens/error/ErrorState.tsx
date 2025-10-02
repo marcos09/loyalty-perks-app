@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/shared/themed-text";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, View } from "react-native";
-import { styles } from './ErrorState.styles';
+import { styles } from './styles';
 
 interface ErrorStateProps {
   error: unknown;
