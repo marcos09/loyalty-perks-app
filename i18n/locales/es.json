@@ -1,0 +1,55 @@
+{
+  "common": {
+    "search": "Buscar",
+    "filters": "Filtros",
+    "close": "Cerrar",
+    "apply": "Aplicar",
+    "clear": "Limpiar",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "all": "Todas",
+    "results": "resultados",
+    "description": "Descripción",
+    "valid": "Válido",
+    "days": "Días",
+    "expires": "Vence",
+    "getBenefit": "Obtener beneficio",
+    "seeAllBenefits": "Ver todos los beneficios",
+    "clearFilters": "Limpiar filtros"
+  },
+  "benefits": {
+    "title": "Beneficios",
+    "benefit": "Beneficio",
+    "notFound": "Beneficio no encontrado",
+    "searchPlaceholder": "Buscar beneficios, categorías o marcas",
+    "noBenefitsAvailable": "No hay beneficios disponibles",
+    "noBenefitsDescription": "Los filtros que seleccionaste no coinciden con ningún beneficio actual. Prueba ajustando tus criterios de búsqueda.",
+    "errorTitle": "Ups, algo salió mal"
+  },
+  "filters": {
+    "title": "Filtros",
+    "categories": "Categorías",
+    "validDays": "Días válidos",
+    "status": "Estado",
+    "sortBy": "Ordenar por",
+    "minDiscount": "Mínimo % descuento",
+    "onlyActive": "Solo vigentes",
+    "onlyActiveChecked": "Solo vigentes ✓"
+  },
+  "sortOptions": {
+    "relevance": "Relevancia",
+    "expiresAsc": "Vence ↑",
+    "expiresDesc": "Vence ↓",
+    "discountDesc": "Descuento",
+    "titleAsc": "A-Z"
+  },
+  "weekdays": {
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mié",
+    "thu": "Jue",
+    "fri": "Vie",
+    "sat": "Sáb",
+    "sun": "Dom"
+  }
+}

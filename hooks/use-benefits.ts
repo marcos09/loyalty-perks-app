@@ -1,49 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type Benefit = {
-  /**
-   * Unique identifier for the benefit. Used for routing and lookups.
-   */
   id: string;
-
-  /**
-   * Human-readable benefit name to show in lists and headers.
-   */
   title: string;
-
-  /**
-   * Promotional discount label (e.g., "10% OFF", "$5 OFF").
-   */
   discount: string;
-
-  /**
-   * Category label to group and filter benefits (e.g., "Comida").
-   */
   category: string;
-
-  /**
-   * Square image or logo for list items and compact UI.
-   */
   imageSquare: any;
-
-  /**
-   * Large hero image for detail screens and headers.
-   */
   imageHero: any;
-
-  /**
-   * Description of the benefit terms and how to redeem.
-   */
   description: string;
-
-  /**
-   * Weekday abbreviations on which the benefit is valid (e.g., ["Lun", "Mar"]).
-   */
   validDays: string[];
-
-  /**
-   * ISO-8601 expiration date for the benefit validity window.
-   */
   expiresAt: string;
 };
 
@@ -161,7 +126,6 @@ function compareBySort(a: Benefit, b: Benefit, sortBy: SortBy, query: string): n
     }
     case 'relevance':
     default: {
-      // Simple relevance: title startsWith > includes, category match boosts
       const q = query.trim().toLowerCase();
       if (!q) return 0;
       const aTitle = a.title.toLowerCase();
@@ -225,7 +189,6 @@ function generateBenefits(count = 140): Benefit[] {
 
     const daysCount = 3 + ((i + 1) % 4);
     const allDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    // Randomly select days instead of always taking the first N days
     const shuffledDays = [...allDays].sort(() => Math.random() - 0.5);
     const validDays = shuffledDays.slice(0, daysCount);
 
@@ -252,7 +215,6 @@ function generateBenefits(count = 140): Benefit[] {
 }
 
 async function fetchBenefits(): Promise<Benefit[]> {
-  // Simulate latency and a small chance of failure
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   await delay(600);
   return generateBenefits(140);

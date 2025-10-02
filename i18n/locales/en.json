@@ -1,0 +1,55 @@
+{
+  "common": {
+    "search": "Search",
+    "filters": "Filters",
+    "close": "Close",
+    "apply": "Apply",
+    "clear": "Clear",
+    "retry": "Retry",
+    "back": "Back",
+    "all": "All",
+    "results": "results",
+    "description": "Description",
+    "valid": "Valid",
+    "days": "Days",
+    "expires": "Expires",
+    "getBenefit": "Get benefit",
+    "seeAllBenefits": "See all benefits",
+    "clearFilters": "Clear filters"
+  },
+  "benefits": {
+    "title": "Benefits",
+    "benefit": "Benefit",
+    "notFound": "Benefit not found",
+    "searchPlaceholder": "Search benefits, categories or brands",
+    "noBenefitsAvailable": "No benefits available",
+    "noBenefitsDescription": "The filters you selected don't match any current benefits. Try adjusting your search criteria.",
+    "errorTitle": "Oops, something went wrong"
+  },
+  "filters": {
+    "title": "Filters",
+    "categories": "Categories",
+    "validDays": "Valid days",
+    "status": "Status",
+    "sortBy": "Sort by",
+    "minDiscount": "Minimum % discount",
+    "onlyActive": "Active only",
+    "onlyActiveChecked": "Active only ✓"
+  },
+  "sortOptions": {
+    "relevance": "Relevance",
+    "expiresAsc": "Expires ↑",
+    "expiresDesc": "Expires ↓",
+    "discountDesc": "Discount",
+    "titleAsc": "A-Z"
+  },
+  "weekdays": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  }
+}
