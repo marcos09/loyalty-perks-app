@@ -1,7 +1,3 @@
-// ============================================================================
-// BENEFIT API HOOKS
-// ============================================================================
-
 import { API_BASE_URL, API_ENDPOINTS } from '@/config/api';
 import { useQuery } from '@tanstack/react-query';
 
@@ -24,9 +20,6 @@ export type UseBenefitReturn = {
   refetch: () => void;
 };
 
-/**
- * Fetch a single benefit by ID
- */
 async function fetchBenefitById(id: string): Promise<Benefit> {
   try {
     const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.BENEFIT_BY_ID(id)}`);
@@ -44,9 +37,6 @@ async function fetchBenefitById(id: string): Promise<Benefit> {
   }
 }
 
-/**
- * Hook to fetch a single benefit by ID
- */
 export function useBenefit(id: string | undefined): UseBenefitReturn {
   const {
     data,
@@ -57,8 +47,6 @@ export function useBenefit(id: string | undefined): UseBenefitReturn {
     queryKey: ['benefit', id],
     queryFn: () => fetchBenefitById(id!),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   return {

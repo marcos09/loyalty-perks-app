@@ -1,12 +1,5 @@
-// ============================================================================
-// API-SPECIFIC TYPES
-// ============================================================================
-
 import type { SortBy } from './index';
 
-/**
- * Backend DTO for benefit data
- */
 export interface BenefitDto {
   id: string;
   title: string;
@@ -19,9 +12,6 @@ export interface BenefitDto {
   expiresAt: string;
 }
 
-/**
- * Benefits API response DTO
- */
 export interface BenefitsResponseDto {
   data: BenefitDto[];
   total: number;
@@ -30,17 +20,11 @@ export interface BenefitsResponseDto {
   success: boolean;
 }
 
-/**
- * Categories API response DTO
- */
 export interface CategoriesResponseDto {
   data: string[];
   success: boolean;
 }
 
-/**
- * Benefits filters DTO for API requests
- */
 export interface BenefitsFiltersDto {
   category?: string;
   search?: string;
@@ -52,30 +36,18 @@ export interface BenefitsFiltersDto {
   limit?: number;
 }
 
-/**
- * Error response DTO
- */
 export interface ErrorResponseDto {
   error: string;
   success: false;
 }
 
-// ============================================================================
-// API ENDPOINT TYPES
-// ============================================================================
 
-/**
- * API endpoint configuration
- */
 export interface ApiEndpoints {
   BENEFITS: string;
   BENEFIT_BY_ID: (id: string) => string;
   CATEGORIES: string;
 }
 
-/**
- * API configuration
- */
 export interface ApiConfig {
   baseUrl: string;
   endpoints: ApiEndpoints;
@@ -83,18 +55,9 @@ export interface ApiConfig {
   retries: number;
 }
 
-// ============================================================================
-// API CLIENT TYPES
-// ============================================================================
 
-/**
- * HTTP method types
- */
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-/**
- * API request configuration
- */
 export interface ApiRequestConfig {
   method: HttpMethod;
   url: string;
@@ -104,9 +67,6 @@ export interface ApiRequestConfig {
   timeout?: number;
 }
 
-/**
- * API response wrapper
- */
 export interface ApiResponse<T = any> {
   data: T;
   status: number;
@@ -114,22 +74,13 @@ export interface ApiResponse<T = any> {
   headers: Record<string, string>;
 }
 
-/**
- * API error
- */
 export interface ApiError extends Error {
   status?: number;
   response?: ApiResponse;
   config?: ApiRequestConfig;
 }
 
-// ============================================================================
-// REACT QUERY API TYPES
-// ============================================================================
 
-/**
- * Query key factory for API endpoints
- */
 export class ApiQueryKeys {
   static benefits = (filters?: Partial<BenefitsFiltersDto>) => 
     ['benefits', filters] as const;
@@ -144,9 +95,6 @@ export class ApiQueryKeys {
     [...this.benefits(filters), 'infinite'] as const;
 }
 
-/**
- * Query options for API calls
- */
 export interface ApiQueryOptions {
   staleTime?: number;
   gcTime?: number;
@@ -156,27 +104,15 @@ export interface ApiQueryOptions {
   refetchOnReconnect?: boolean;
 }
 
-// ============================================================================
-// TYPE GUARDS FOR API RESPONSES
-// ============================================================================
 
-/**
- * Type guard for API success response
- */
 export function isApiSuccess<T>(response: any): response is { data: T; success: true } {
   return response && response.success === true && 'data' in response;
 }
 
-/**
- * Type guard for API error response
- */
 export function isApiError(response: any): response is { error: string; success: false } {
   return response && response.success === false && 'error' in response;
 }
 
-/**
- * Type guard for BenefitDto
- */
 export function isBenefitDto(value: any): value is BenefitDto {
   return (
     typeof value === 'object' &&
@@ -191,9 +127,6 @@ export function isBenefitDto(value: any): value is BenefitDto {
   );
 }
 
-/**
- * Type guard for BenefitsResponseDto
- */
 export function isBenefitsResponseDto(value: any): value is BenefitsResponseDto {
   return (
     typeof value === 'object' &&
@@ -206,9 +139,6 @@ export function isBenefitsResponseDto(value: any): value is BenefitsResponseDto 
   );
 }
 
-/**
- * Type guard for CategoriesResponseDto
- */
 export function isCategoriesResponseDto(value: any): value is CategoriesResponseDto {
   return (
     typeof value === 'object' &&

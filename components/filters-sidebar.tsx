@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { FilterChip } from '@/components/filter-chip';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { SortBy } from '@/hooks/use-benefits';
+import type { SortBy } from '@/types';
 
 interface FiltersSidebarProps {
   categories: string[];

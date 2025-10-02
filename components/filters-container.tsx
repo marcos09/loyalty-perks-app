@@ -5,7 +5,7 @@ import { useFilterLogic } from '@/components/filter-logic';
 import { FiltersModal } from '@/components/filters-modal';
 import { FiltersSidebar } from '@/components/filters-sidebar';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/use-benefits';
+import { useBenefits } from '@/hooks/api/use-benefits';
 import { useResponsive } from '@/hooks/use-responsive';
 
 interface FiltersContainerProps {

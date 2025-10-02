@@ -28,6 +28,36 @@
     "noBenefitsDescription": "The filters you selected don't match any current benefits. Try adjusting your search criteria.",
     "errorTitle": "Oops, something went wrong"
   },
+  "errors": {
+    "generic": {
+      "title": "Something went wrong",
+      "description": "We encountered an unexpected error. Please try again."
+    },
+    "network": {
+      "title": "No internet connection",
+      "description": "Please check your internet connection and try again."
+    },
+    "server": {
+      "title": "Server error",
+      "description": "Our servers are experiencing issues. Please try again in a few moments."
+    },
+    "notFound": {
+      "title": "Not found",
+      "description": "The requested resource could not be found."
+    },
+    "unauthorized": {
+      "title": "Access denied",
+      "description": "You don't have permission to access this resource."
+    },
+    "timeout": {
+      "title": "Request timeout",
+      "description": "The request took too long to complete. Please try again."
+    },
+    "details": {
+      "title": "Error Details",
+      "show": "Show details"
+    }
+  },
   "filters": {
     "title": "Filters",
     "categories": "Categories",

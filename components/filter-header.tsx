@@ -4,7 +4,7 @@ import { FiltersState } from '@/components/filters-state';
 import { ScreenHeader } from '@/components/screen-header';
 import { SearchBar } from '@/components/search-bar';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/use-benefits';
+import { useBenefits } from '@/hooks/api/use-benefits';
 
 interface FilterHeaderProps {
   onFiltersPress: () => void;

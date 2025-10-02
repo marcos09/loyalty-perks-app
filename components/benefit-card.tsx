@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { ImageBackground, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Benefit } from '@/hooks/use-benefits';
+import type { Benefit } from '@/types';
 
 interface BenefitCardProps {
   benefit: Benefit;

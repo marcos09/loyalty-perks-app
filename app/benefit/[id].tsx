@@ -8,7 +8,7 @@ import { BenefitDetailSections } from '@/components/benefit-detail-sections';
 import { ErrorState } from '@/components/error-state';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useBenefit } from '@/hooks/use-benefits';
+import { useBenefit } from '@/hooks/api/use-benefit';
 
 export default function BenefitDetailScreen() {
   const { t } = useTranslation();

@@ -1,28 +1,20 @@
-// ============================================================================
-// BENEFITS API HOOKS
-// ============================================================================
-
 import type {
-    BenefitsFilters,
-    BenefitsResponse,
-    CategoriesResponse,
-    Category,
-    FilterState,
-    UseBenefitsReturn
+  BenefitsFilters,
+  BenefitsResponse,
+  FilterState,
+  UseBenefitsReturn
 } from '@/types';
 import { apiClient } from './api-instance';
 import { useApiInfiniteQuery, useApiQuery } from './query-hooks';
+import { useCategories } from './use-categories';
 
-/**
- * Generate cache key for benefits queries
- */
 function getBenefitsCacheKey(filters: FilterState) {
   return [
     'benefits',
     {
       category: filters.selectedCategory,
       search: filters.searchQuery,
-      days: filters.selectedDays.sort(), // Sort to ensure consistent cache keys
+      days: filters.selectedDays.sort(),
       onlyActive: filters.onlyActive,
       minDiscountPercent: filters.minDiscountPercent,
       sortBy: filters.sortBy,
@@ -30,9 +22,6 @@ function getBenefitsCacheKey(filters: FilterState) {
   ];
 }
 
-/**
- * Build query string from filters
- */
 function buildQueryString(filters: BenefitsFilters): string {
   const params = new URLSearchParams();
   
@@ -48,31 +37,17 @@ function buildQueryString(filters: BenefitsFilters): string {
   return params.toString();
 }
 
-/**
- * Fetch benefits with filters
- */
 async function fetchBenefits(filters: BenefitsFilters): Promise<BenefitsResponse> {
   const queryString = buildQueryString(filters);
-  const url = queryString ? `/benefits?${queryString}` : '/benefits';
+  const url = queryString ? `/api/benefits?${queryString}` : '/api/benefits';
   const response = await apiClient.get<BenefitsResponse>(url);
   return response.data;
 }
 
-/**
- * Fetch categories
- */
-async function fetchCategories(): Promise<Category[]> {
-  const response = await apiClient.get<CategoriesResponse>('/categories');
-  return response.data.data;
-}
 
-/**
- * Hook to fetch benefits with filters
- */
 export function useBenefits(appliedFilters: FilterState): UseBenefitsReturn {
   const cacheKey = getBenefitsCacheKey(appliedFilters);
   
-  // Use React Query for benefits data
   const {
     data: benefitsData,
     isLoading: loading,
@@ -95,21 +70,10 @@ export function useBenefits(appliedFilters: FilterState): UseBenefitsReturn {
       
       return fetchBenefits(filters);
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  // Use React Query for categories
-  const {
-    data: categories = [],
-  } = useApiQuery<Category[]>({
-    queryKey: ['categories'],
-    queryFn: fetchCategories,
-    staleTime: 10 * 60 * 1000, // 10 minutes - categories change less frequently
-    gcTime: 30 * 60 * 1000, // 30 minutes
-  });
+  const { data: categories = [] } = useCategories();
 
-  // Use infinite query for pagination
   const {
     data: infiniteData,
     fetchNextPage,
@@ -136,11 +100,8 @@ export function useBenefits(appliedFilters: FilterState): UseBenefitsReturn {
       const totalLoaded = pages.reduce((acc, page) => acc + page.data.length, 0);
       return totalLoaded < lastPage.total ? pages.length + 1 : undefined;
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 
-  // Flatten all pages data
   const data = infiniteData?.pages.flatMap(page => page.data) ?? [];
   const total = benefitsData?.total ?? 0;
   const hasMore = hasNextPage ?? false;
@@ -153,9 +114,8 @@ export function useBenefits(appliedFilters: FilterState): UseBenefitsReturn {
 
   return {
     data,
-    filtered: data, // Backend already filters, so filtered = data
+    filtered: data,
     categories,
-    // Pagination
     loadMore,
     loadingMore,
     hasMore,

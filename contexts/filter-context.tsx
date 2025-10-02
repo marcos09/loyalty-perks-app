@@ -1,4 +1,4 @@
-import { SortBy } from '@/hooks/use-benefits';
+import type { SortBy } from '@/types';
 import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 
 export interface FilterState {
@@ -11,18 +11,14 @@ export interface FilterState {
 }
 
 interface FilterContextType {
-  // Applied filters (what's currently being used for API calls)
   appliedFilters: FilterState;
-  // Draft filters (what user is currently selecting in the UI)
   draftFilters: FilterState;
-  // Draft filter setters
   setDraftCategory: (category: string | undefined) => void;
   setDraftSearchQuery: (query: string) => void;
   setDraftDays: (days: string[]) => void;
   setDraftOnlyActive: (active: boolean) => void;
   setDraftMinDiscountPercent: (percent: number | undefined) => void;
   setDraftSortBy: (sort: SortBy) => void;
-  // Filter actions
   applyFilters: () => void;
   clearFilters: () => void;
   resetDraftToApplied: () => void;
@@ -41,13 +37,10 @@ const initialFilterState: FilterState = {
 };
 
 export function FilterProvider({ children }: { children: ReactNode }) {
-  // Applied filters (what's currently being used for API calls)
   const [appliedFilters, setAppliedFilters] = useState<FilterState>(initialFilterState);
   
-  // Draft filters (what user is currently selecting in the UI)
   const [draftFilters, setDraftFilters] = useState<FilterState>(initialFilterState);
 
-  // Draft filter setters (for UI changes that don't immediately apply)
   const setDraftCategory = useCallback((category: string | undefined) => {
     setDraftFilters(prev => ({ ...prev, selectedCategory: category }));
   }, []);
@@ -72,23 +65,19 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     setDraftFilters(prev => ({ ...prev, sortBy: sort }));
   }, []);
 
-  // Apply draft filters (called when user clicks Apply)
   const applyFilters = useCallback(() => {
     setAppliedFilters(draftFilters);
   }, [draftFilters]);
 
-  // Clear all filters (called when user clicks Clear)
   const clearFilters = useCallback(() => {
     setDraftFilters(initialFilterState);
     setAppliedFilters(initialFilterState);
   }, []);
 
-  // Reset draft to current applied filters (called when modal is opened)
   const resetDraftToApplied = useCallback(() => {
     setDraftFilters(appliedFilters);
   }, [appliedFilters]);
 
-  // Direct setter for applied filters (for immediate search)
   const setAppliedFiltersDirect = useCallback((updater: (prev: FilterState) => FilterState) => {
     setAppliedFilters(updater);
   }, []);

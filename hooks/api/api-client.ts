@@ -187,8 +187,8 @@ export class ApiClient {
    * Determine if request should be retried
    */
   private shouldRetry(error: ApiError): boolean {
-    // Retry on network errors or 5xx status codes
-    return !error.status || (error.status >= 500 && error.status < 600);
+    // Only retry on network errors (no status code), let React Query handle HTTP errors
+    return !error.status;
   }
 
   /**

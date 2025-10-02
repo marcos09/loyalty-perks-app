@@ -1,69 +1,65 @@
-// ============================================================================
-// REACT QUERY PROVIDER
-// ============================================================================
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 import { Platform } from 'react-native';
 
-/**
- * Create a new QueryClient instance with default options
- */
 function createQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // Time in milliseconds that data remains fresh
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        // Time in milliseconds that unused/inactive cache data remains in memory
-        gcTime: 10 * 60 * 1000, // 10 minutes
-        // Retry failed requests
+        staleTime: 0,
+        gcTime: 0,
         retry: (failureCount, error: any) => {
-          // Don't retry on 4xx errors (client errors)
           if (error?.status >= 400 && error?.status < 500) {
             return false;
           }
-          // Retry up to 3 times for other errors
+          // Retry fewer times for 500 errors to show error faster
+          if (error?.status >= 500) {
+            return failureCount < 2;
+          }
           return failureCount < 3;
         },
-        // Retry delay with exponential backoff
-        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-        // Refetch behavior
-        refetchOnWindowFocus: false, // Disable refetch on window focus for mobile
-        refetchOnMount: true, // Refetch when component mounts
-        refetchOnReconnect: true, // Refetch when network reconnects
+        retryDelay: (attemptIndex, error: any) => {
+          // Shorter delays for 500 errors to show error faster
+          if (error?.status >= 500) {
+            return Math.min(1000 * 2 ** attemptIndex, 5000); // 1s, 2s, max 5s
+          }
+          return Math.min(1000 * 2 ** attemptIndex, 30000); // 1s, 2s, 4s, 8s, 16s, max 30s
+        },
+        refetchOnWindowFocus: true,
+        refetchOnMount: true,
+        refetchOnReconnect: true,
       },
       mutations: {
-        // Retry failed mutations
         retry: (failureCount, error: any) => {
-          // Don't retry on 4xx errors (client errors)
           if (error?.status >= 400 && error?.status < 500) {
             return false;
           }
-          // Retry up to 2 times for other errors
+          // Retry more times for 500 errors
+          if (error?.status >= 500) {
+            return failureCount < 4;
+          }
           return failureCount < 2;
         },
-        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        retryDelay: (attemptIndex, error: any) => {
+          // Longer delays for 500 errors
+          if (error?.status >= 500) {
+            return Math.min(2000 * 2 ** attemptIndex, 60000); // 2s, 4s, 8s, 16s, max 60s
+          }
+          return Math.min(1000 * 2 ** attemptIndex, 30000); // 1s, 2s, 4s, 8s, max 30s
+        },
       },
     },
   });
 }
 
-/**
- * QueryClient Provider Component
- * 
- * This component provides React Query functionality to the entire app.
- * It creates a QueryClient instance and wraps the app with QueryClientProvider.
- */
 export function QueryClientProviderWrapper({ children }: { children: React.ReactNode }) {
-  // Create QueryClient instance once and keep it stable
   const [queryClient] = useState(() => createQueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* Only show devtools in development and on web platform */}
       {__DEV__ && Platform.OS === 'web' && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );

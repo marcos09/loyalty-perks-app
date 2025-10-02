@@ -4,7 +4,7 @@ import { BenefitCard } from '@/components/benefit-card';
 import { EmptyState } from '@/components/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/use-benefits';
+import { useBenefits } from '@/hooks/api/use-benefits';
 
 interface BenefitsListProps {
   onClearFilters: () => void;

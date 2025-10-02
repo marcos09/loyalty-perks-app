@@ -1,7 +1,7 @@
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { Benefit } from '@/hooks/use-benefits';
+import type { Benefit } from '@/types';
 
 interface BenefitDetailHeaderProps {
   benefit?: Benefit;

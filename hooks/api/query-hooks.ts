@@ -1,24 +1,18 @@
-// ============================================================================
-// GENERIC REACT QUERY HOOKS
-// ============================================================================
 
 import {
-    useInfiniteQuery,
-    useMutation,
-    useQuery,
-    useQueryClient,
-    type MutationKey,
-    type QueryKey,
-    type UseInfiniteQueryOptions,
-    type UseMutationOptions,
-    type UseQueryOptions,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type MutationKey,
+  type QueryKey,
+  type UseInfiniteQueryOptions,
+  type UseMutationOptions,
+  type UseQueryOptions,
 } from '@tanstack/react-query';
 
 import type { ApiError, ApiResponse } from '@/types/api';
 
-/**
- * Generic query hook options
- */
 export interface UseApiQueryOptions<TData = any, TError = ApiError> extends Omit<
   UseQueryOptions<ApiResponse<TData>, TError, TData, QueryKey>,
   'queryFn' | 'queryKey'
@@ -34,12 +28,9 @@ export interface UseApiQueryOptions<TData = any, TError = ApiError> extends Omit
   refetchOnReconnect?: boolean;
 }
 
-/**
- * Generic mutation hook options
- */
 export interface UseApiMutationOptions<TData = any, TVariables = any, TError = ApiError> extends Omit<
   UseMutationOptions<ApiResponse<TData>, TError, TVariables, MutationKey>,
-  'mutationFn'
+  'mutationFn' | 'onSuccess' | 'onError' | 'onSettled'
 > {
   mutationFn: (variables: TVariables) => Promise<ApiResponse<TData>>;
   onSuccess?: (data: TData, variables: TVariables, context: any) => void;
@@ -47,9 +38,6 @@ export interface UseApiMutationOptions<TData = any, TVariables = any, TError = A
   onSettled?: (data: TData | undefined, error: TError | null, variables: TVariables, context: any) => void;
 }
 
-/**
- * Generic infinite query hook options
- */
 export interface UseApiInfiniteQueryOptions<TData = any, TError = ApiError> extends Omit<
   UseInfiniteQueryOptions<ApiResponse<TData>, TError, TData, QueryKey, number>,
   'queryFn' | 'queryKey'
@@ -67,9 +55,6 @@ export interface UseApiInfiniteQueryOptions<TData = any, TError = ApiError> exte
   refetchOnReconnect?: boolean;
 }
 
-/**
- * Generic query hook
- */
 export function useApiQuery<TData = any, TError = ApiError>(
   options: UseApiQueryOptions<TData, TError>
 ) {
@@ -77,12 +62,12 @@ export function useApiQuery<TData = any, TError = ApiError>(
     queryKey,
     queryFn,
     enabled = true,
-    staleTime = 5 * 60 * 1000, // 5 minutes
-    gcTime = 10 * 60 * 1000, // 10 minutes
-    retry = 3,
-    refetchOnWindowFocus = false,
-    refetchOnMount = true,
-    refetchOnReconnect = true,
+    staleTime,
+    gcTime,
+    retry,
+    refetchOnWindowFocus,
+    refetchOnMount,
+    refetchOnReconnect,
     ...restOptions
   } = options;
 
@@ -90,19 +75,16 @@ export function useApiQuery<TData = any, TError = ApiError>(
     queryKey,
     queryFn,
     enabled,
-    staleTime,
-    gcTime,
-    retry,
-    refetchOnWindowFocus,
-    refetchOnMount,
-    refetchOnReconnect,
+    ...(staleTime !== undefined && { staleTime }),
+    ...(gcTime !== undefined && { gcTime }),
+    ...(retry !== undefined && { retry }),
+    ...(refetchOnWindowFocus !== undefined && { refetchOnWindowFocus }),
+    ...(refetchOnMount !== undefined && { refetchOnMount }),
+    ...(refetchOnReconnect !== undefined && { refetchOnReconnect }),
     ...restOptions,
   });
 }
 
-/**
- * Generic mutation hook
- */
 export function useApiMutation<TData = any, TVariables = any, TError = ApiError>(
   options: UseApiMutationOptions<TData, TVariables, TError>
 ) {
@@ -129,9 +111,6 @@ export function useApiMutation<TData = any, TVariables = any, TError = ApiError>
   });
 }
 
-/**
- * Generic infinite query hook
- */
 export function useApiInfiniteQuery<TData = any, TError = ApiError>(
   options: UseApiInfiniteQueryOptions<TData, TError>
 ) {
@@ -141,12 +120,12 @@ export function useApiInfiniteQuery<TData = any, TError = ApiError>(
     getNextPageParam,
     initialPageParam,
     enabled = true,
-    staleTime = 5 * 60 * 1000, // 5 minutes
-    gcTime = 10 * 60 * 1000, // 10 minutes
-    retry = 3,
-    refetchOnWindowFocus = false,
-    refetchOnMount = true,
-    refetchOnReconnect = true,
+    staleTime,
+    gcTime,
+    retry,
+    refetchOnWindowFocus,
+    refetchOnMount,
+    refetchOnReconnect,
     ...restOptions
   } = options;
 
@@ -156,19 +135,16 @@ export function useApiInfiniteQuery<TData = any, TError = ApiError>(
     getNextPageParam,
     initialPageParam,
     enabled,
-    staleTime,
-    gcTime,
-    retry,
-    refetchOnWindowFocus,
-    refetchOnMount,
-    refetchOnReconnect,
+    ...(staleTime !== undefined && { staleTime }),
+    ...(gcTime !== undefined && { gcTime }),
+    ...(retry !== undefined && { retry }),
+    ...(refetchOnWindowFocus !== undefined && { refetchOnWindowFocus }),
+    ...(refetchOnMount !== undefined && { refetchOnMount }),
+    ...(refetchOnReconnect !== undefined && { refetchOnReconnect }),
     ...restOptions,
   });
 }
 
-/**
- * Generic query invalidation hook
- */
 export function useApiQueryInvalidation() {
   const queryClient = useQueryClient();
 
@@ -201,9 +177,6 @@ export function useApiQueryInvalidation() {
   };
 }
 
-/**
- * Generic query prefetching hook
- */
 export function useApiQueryPrefetch() {
   const queryClient = useQueryClient();
 
@@ -218,8 +191,8 @@ export function useApiQueryPrefetch() {
     return queryClient.prefetchQuery({
       queryKey,
       queryFn,
-      staleTime: options?.staleTime ?? 5 * 60 * 1000,
-      gcTime: options?.gcTime ?? 10 * 60 * 1000,
+      ...(options?.staleTime !== undefined && { staleTime: options.staleTime }),
+      ...(options?.gcTime !== undefined && { gcTime: options.gcTime }),
     });
   };
 
@@ -238,8 +211,8 @@ export function useApiQueryPrefetch() {
       queryFn,
       getNextPageParam,
       initialPageParam,
-      staleTime: options?.staleTime ?? 5 * 60 * 1000,
-      gcTime: options?.gcTime ?? 10 * 60 * 1000,
+      ...(options?.staleTime !== undefined && { staleTime: options.staleTime }),
+      ...(options?.gcTime !== undefined && { gcTime: options.gcTime }),
     });
   };
 
@@ -249,9 +222,6 @@ export function useApiQueryPrefetch() {
   };
 }
 
-/**
- * Generic query state hook
- */
 export function useApiQueryState() {
   const queryClient = useQueryClient();
 

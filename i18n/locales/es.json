@@ -28,6 +28,36 @@
     "noBenefitsDescription": "Los filtros que seleccionaste no coinciden con ningún beneficio actual. Prueba ajustando tus criterios de búsqueda.",
     "errorTitle": "Ups, algo salió mal"
   },
+  "errors": {
+    "generic": {
+      "title": "Algo salió mal",
+      "description": "Encontramos un error inesperado. Por favor, inténtalo de nuevo."
+    },
+    "network": {
+      "title": "Sin conexión a internet",
+      "description": "Por favor, verifica tu conexión a internet e inténtalo de nuevo."
+    },
+    "server": {
+      "title": "Error del servidor",
+      "description": "Nuestros servidores están experimentando problemas. Por favor, inténtalo en unos momentos."
+    },
+    "notFound": {
+      "title": "No encontrado",
+      "description": "El recurso solicitado no pudo ser encontrado."
+    },
+    "unauthorized": {
+      "title": "Acceso denegado",
+      "description": "No tienes permisos para acceder a este recurso."
+    },
+    "timeout": {
+      "title": "Tiempo de espera agotado",
+      "description": "La solicitud tardó demasiado en completarse. Por favor, inténtalo de nuevo."
+    },
+    "details": {
+      "title": "Detalles del Error",
+      "show": "Mostrar detalles"
+    }
+  },
   "filters": {
     "title": "Filtros",
     "categories": "Categorías",

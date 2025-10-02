@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FilterChip } from '@/components/filter-chip';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { SortBy } from '@/hooks/use-benefits';
+import type { SortBy } from '@/types';
 
 interface FiltersModalProps {
   visible: boolean;

@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useFilterContext } from '@/contexts/filter-context';
-import { SortBy } from '@/hooks/use-benefits';
+import type { SortBy } from '@/types';
 
 export interface FilterState {
   selectedCategory?: string;

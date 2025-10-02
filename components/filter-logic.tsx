@@ -1,4 +1,4 @@
-import { SortBy } from '@/hooks/use-benefits';
+import type { SortBy } from '@/types';
 import { useTranslation } from 'react-i18next';
 
 export interface FilterLogicProps {
@@ -32,7 +32,6 @@ export function useFilterLogic({
 }: FilterLogicProps) {
   const { t } = useTranslation();
 
-  // Constants
   const WEEKDAYS = [
     t('weekdays.mon'),
     t('weekdays.tue'),
@@ -51,7 +50,6 @@ export function useFilterLogic({
     { key: 'titleAsc', label: t('sortOptions.titleAsc') },
   ];
 
-  // Helper functions
   const toggleDay = (day: string) => {
     if (selectedDays.includes(day)) {
       setSelectedDays(selectedDays.filter((d) => d !== day));

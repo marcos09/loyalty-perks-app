@@ -41,13 +41,18 @@ apiClient.addResponseInterceptor((response) => {
 apiClient.addErrorInterceptor((error) => {
   // Log errors in development
   if (__DEV__) {
-    console.error('API Error:', error);
+    console.error('API Error intercepted:', {
+      message: error.message,
+      status: error.status,
+      url: error.config?.url,
+      error,
+    });
   }
   
   // Handle specific error cases
   if (error.status >= 500) {
     // Handle server errors - show generic error message
-    console.error('Server error:', error.message);
+    console.error('Server error:', error.message, 'Status:', error.status);
   } else if (error.status === 404) {
     // Handle not found errors
     console.warn('Resource not found:', error.config?.url);

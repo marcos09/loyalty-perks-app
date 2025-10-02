@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BenefitDto, BenefitsFiltersDto, CategoriesResponseDto } from './dto/benefit.dto';
 
 @Injectable()
@@ -230,10 +230,12 @@ export class BenefitsService {
       limit = 20,
     } = filters;
 
-    // Generate all benefits
+    if (category === 'Tecnología') {
+      throw new InternalServerErrorException('API Error: Failed to fetch benefits for Tecnología category. Please try again later.');
+    }
+
     const allBenefits = this.generateBenefits(140);
     
-    // Apply filters
     const now = Date.now();
     const query = search?.trim().toLowerCase() || '';
 
@@ -259,14 +261,11 @@ export class BenefitsService {
       return hay.includes(query);
     });
 
-    // Apply sorting
     if (sortBy === 'relevance' && !query) {
-      // No sorting needed
     } else {
       filtered = [...filtered].sort((a, b) => this.compareBySort(a, b, sortBy, query));
     }
 
-    // Apply pagination
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedData = filtered.slice(startIndex, endIndex);

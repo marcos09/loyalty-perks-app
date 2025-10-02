@@ -1,10 +1,3 @@
-// ============================================================================
-// CORE DOMAIN TYPES
-// ============================================================================
-
-/**
- * Core benefit entity representing a loyalty perk
- */
 export interface Benefit {
   id: string;
   title: string;

@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
-import { Benefit } from '@/hooks/use-benefits';
+import type { Benefit } from '@/types';
 
 interface BenefitDetailSectionsProps {
   benefit?: Benefit;
