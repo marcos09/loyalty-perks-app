@@ -17,7 +17,6 @@ export default function BenefitsScreen() {
   const { loading, error, refetch, data } = useBenefits(appliedFilters);
   const previousErrorRef = useRef<unknown>(null);
 
-  // Track errors for debugging (no automatic filter reset)
   useEffect(() => {
     if (error && error !== previousErrorRef.current) {
       const errorInfo = analyzeApiError(error);
@@ -33,12 +32,10 @@ export default function BenefitsScreen() {
   }, [error]);
 
   const handleErrorRetry = () => {
-    // Just retry without resetting filters
     refetch();
   };
 
   const handleResetFilters = () => {
-    // Manually reset filters
     clearFilters();
   };
 
@@ -57,7 +54,6 @@ export default function BenefitsScreen() {
     });
   };
 
-  // Only show full screen loading on initial load (when data is empty)
   if (loading && data.length === 0) {
     return (
       <ThemedView style={{ flex: 1 }}>

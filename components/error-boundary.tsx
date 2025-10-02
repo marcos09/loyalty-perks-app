@@ -29,11 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    // Call the onError callback if provided
     this.props.onError?.(error, errorInfo);
-    
-    // In a real app, you might want to log this to a crash reporting service
-    // Example: crashlytics().recordError(error);
   }
 
   handleRetry = () => {

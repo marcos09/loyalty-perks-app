@@ -4,7 +4,6 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
-  // Force light mode by always using 'light' theme
   const theme = 'light';
   const colorFromProps = props[theme];
 

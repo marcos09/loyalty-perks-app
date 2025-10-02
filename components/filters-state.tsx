@@ -15,7 +15,6 @@ export interface FilterState {
 }
 
 export interface FiltersStateProps {
-  // No props needed - component manages its own state via context
 }
 
 export function FiltersState({}: FiltersStateProps) {
@@ -41,7 +40,6 @@ export function FiltersState({}: FiltersStateProps) {
   } = appliedFilters;
 
 
-  // Constants moved from main screen
   const SORT_OPTIONS: { key: SortBy; label: string }[] = [
     { key: 'relevance', label: 'Relevance' },
     { key: 'expiresAsc', label: 'Expires ↑' },

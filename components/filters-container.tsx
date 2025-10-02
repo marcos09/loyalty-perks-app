@@ -51,19 +51,16 @@ export function FiltersContainer({ children }: FiltersContainerProps) {
     setSearchQuery: setDraftSearchQuery,
   });
 
-  // Handle opening filters modal/sidebar
   const handleOpenFilters = () => {
-    resetDraftToApplied(); // Reset draft to current applied filters
+    resetDraftToApplied();
     setFiltersVisible(true);
   };
 
-  // Handle applying filters
   const handleApplyFilters = () => {
     applyFilters();
     setFiltersVisible(false);
   };
 
-  // Handle clearing filters
   const handleClearFilters = () => {
     clearFilters();
     setFiltersVisible(false);

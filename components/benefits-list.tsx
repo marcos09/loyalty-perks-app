@@ -14,10 +14,8 @@ export function BenefitsList({ onClearFilters }: BenefitsListProps) {
   const { appliedFilters } = useFilterContext();
   const { filtered, loading, loadingMore, loadMore } = useBenefits(appliedFilters);
   
-  // Debug logging
   console.log('BenefitsList render:', { loading, filteredLength: filtered.length });
   
-  // Check if there are any applied filters
   const hasAppliedFilters = 
     !!appliedFilters.selectedCategory ||
     appliedFilters.selectedDays.length > 0 ||
@@ -25,8 +23,6 @@ export function BenefitsList({ onClearFilters }: BenefitsListProps) {
     appliedFilters.minDiscountPercent !== undefined ||
     appliedFilters.sortBy !== 'relevance' ||
     appliedFilters.searchQuery.trim().length > 0;
-
-  // Show loading skeleton during loading when no data or when data is being refreshed
   if (loading && filtered.length === 0) {
     return (
       <View style={styles.container}>

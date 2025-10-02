@@ -1,16 +1,8 @@
-// ============================================================================
-// API CLIENT
-// ============================================================================
-
 import type {
     ApiError,
     ApiRequestConfig,
     ApiResponse
 } from '@/types/api';
-
-/**
- * Base API client configuration
- */
 interface ApiClientConfig {
   baseURL: string;
   timeout?: number;
@@ -19,24 +11,11 @@ interface ApiClientConfig {
   headers?: Record<string, string>;
 }
 
-/**
- * Request interceptor function type
- */
 export type RequestInterceptor = (config: ApiRequestConfig) => ApiRequestConfig | Promise<ApiRequestConfig>;
 
-/**
- * Response interceptor function type
- */
 export type ResponseInterceptor = (response: ApiResponse) => ApiResponse | Promise<ApiResponse>;
 
-/**
- * Error interceptor function type
- */
 export type ErrorInterceptor = (error: ApiError) => ApiError | Promise<ApiError>;
-
-/**
- * Base API client class
- */
 export class ApiClient {
   private config: Required<ApiClientConfig>;
   private requestInterceptors: RequestInterceptor[] = [];
@@ -56,30 +35,18 @@ export class ApiClient {
     };
   }
 
-  /**
-   * Add request interceptor
-   */
   addRequestInterceptor(interceptor: RequestInterceptor): void {
     this.requestInterceptors.push(interceptor);
   }
 
-  /**
-   * Add response interceptor
-   */
   addResponseInterceptor(interceptor: ResponseInterceptor): void {
     this.responseInterceptors.push(interceptor);
   }
 
-  /**
-   * Add error interceptor
-   */
   addErrorInterceptor(interceptor: ErrorInterceptor): void {
     this.errorInterceptors.push(interceptor);
   }
 
-  /**
-   * Execute request interceptors
-   */
   private async executeRequestInterceptors(config: ApiRequestConfig): Promise<ApiRequestConfig> {
     let processedConfig = { ...config };
     
@@ -90,9 +57,6 @@ export class ApiClient {
     return processedConfig;
   }
 
-  /**
-   * Execute response interceptors
-   */
   private async executeResponseInterceptors(response: ApiResponse): Promise<ApiResponse> {
     let processedResponse = { ...response };
     
@@ -103,9 +67,6 @@ export class ApiClient {
     return processedResponse;
   }
 
-  /**
-   * Execute error interceptors
-   */
   private async executeErrorInterceptors(error: ApiError): Promise<ApiError> {
     let processedError = { ...error };
     
@@ -116,9 +77,6 @@ export class ApiClient {
     return processedError;
   }
 
-  /**
-   * Build full URL
-   */
   private buildURL(url: string): string {
     if (url.startsWith('http')) {
       return url;
@@ -133,9 +91,6 @@ export class ApiClient {
     return `${baseURL}${cleanURL}`;
   }
 
-  /**
-   * Build query string from params
-   */
   private buildQueryString(params: Record<string, any>): string {
     const searchParams = new URLSearchParams();
     
@@ -152,9 +107,6 @@ export class ApiClient {
     return searchParams.toString();
   }
 
-  /**
-   * Create AbortController for timeout
-   */
   private createAbortController(): AbortController {
     const controller = new AbortController();
     
@@ -165,9 +117,6 @@ export class ApiClient {
     return controller;
   }
 
-  /**
-   * Retry logic
-   */
   private async retryRequest<T>(
     requestFn: () => Promise<T>,
     retries: number = this.config.retries
@@ -183,39 +132,25 @@ export class ApiClient {
     }
   }
 
-  /**
-   * Determine if request should be retried
-   */
   private shouldRetry(error: ApiError): boolean {
-    // Only retry on network errors (no status code), let React Query handle HTTP errors
     return !error.status;
   }
 
-  /**
-   * Delay utility
-   */
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  /**
-   * Make HTTP request
-   */
   async request<T = any>(config: ApiRequestConfig): Promise<ApiResponse<T>> {
     try {
-      // Execute request interceptors
       const processedConfig = await this.executeRequestInterceptors(config);
       
-      // Build URL
       const fullURL = this.buildURL(processedConfig.url);
       const urlWithParams = processedConfig.params 
         ? `${fullURL}?${this.buildQueryString(processedConfig.params)}`
         : fullURL;
 
-      // Create abort controller for timeout
       const abortController = this.createAbortController();
 
-      // Prepare fetch options
       const fetchOptions: RequestInit = {
         method: processedConfig.method,
         headers: {
@@ -225,12 +160,10 @@ export class ApiClient {
         signal: abortController.signal,
       };
 
-      // Add body for non-GET requests
       if (processedConfig.data && processedConfig.method !== 'GET') {
         fetchOptions.body = JSON.stringify(processedConfig.data);
       }
 
-      // Make request with retry logic
       const response = await this.retryRequest(async () => {
         const res = await fetch(urlWithParams, fetchOptions);
         
@@ -251,7 +184,6 @@ export class ApiClient {
         return res;
       });
 
-      // Parse response
       const data = await response.json();
       const headers: Record<string, string> = {};
       response.headers.forEach((value, key) => {
@@ -265,22 +197,17 @@ export class ApiClient {
         headers,
       };
 
-      // Execute response interceptors
       return await this.executeResponseInterceptors(apiResponse);
 
     } catch (error) {
       const apiError = error as ApiError;
       
-      // Execute error interceptors
       const processedError = await this.executeErrorInterceptors(apiError);
       
       throw processedError;
     }
   }
 
-  /**
-   * GET request
-   */
   async get<T = any>(url: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
     return this.request<T>({
       method: 'GET',
@@ -289,9 +216,6 @@ export class ApiClient {
     });
   }
 
-  /**
-   * POST request
-   */
   async post<T = any>(url: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>({
       method: 'POST',
@@ -300,9 +224,6 @@ export class ApiClient {
     });
   }
 
-  /**
-   * PUT request
-   */
   async put<T = any>(url: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>({
       method: 'PUT',
@@ -311,9 +232,6 @@ export class ApiClient {
     });
   }
 
-  /**
-   * PATCH request
-   */
   async patch<T = any>(url: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>({
       method: 'PATCH',
@@ -322,9 +240,6 @@ export class ApiClient {
     });
   }
 
-  /**
-   * DELETE request
-   */
   async delete<T = any>(url: string): Promise<ApiResponse<T>> {
     return this.request<T>({
       method: 'DELETE',
@@ -333,9 +248,6 @@ export class ApiClient {
   }
 }
 
-/**
- * Create API client instance
- */
 export function createApiClient(config: ApiClientConfig): ApiClient {
   return new ApiClient(config);
 }

@@ -23,19 +23,14 @@ export default function ErrorPage() {
   const statusCode = params.statusCode;
 
   const handleRetry = () => {
-    // Navigate back without resetting filters
     router.replace('/');
   };
 
   const handleGoHome = () => {
-    // Navigate back without resetting filters
     router.replace('/');
   };
 
-  // Determine if this is an API error based on status code
   const isApiError = statusCode && (statusCode.startsWith('4') || statusCode.startsWith('5'));
-  
-  // Customize error message based on status code
   const getApiErrorMessage = () => {
     if (!statusCode) return description;
     

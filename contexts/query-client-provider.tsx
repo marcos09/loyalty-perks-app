@@ -14,18 +14,16 @@ function createQueryClient() {
           if (error?.status >= 400 && error?.status < 500) {
             return false;
           }
-          // Retry fewer times for 500 errors to show error faster
           if (error?.status >= 500) {
             return failureCount < 2;
           }
           return failureCount < 3;
         },
         retryDelay: (attemptIndex, error: any) => {
-          // Shorter delays for 500 errors to show error faster
           if (error?.status >= 500) {
-            return Math.min(1000 * 2 ** attemptIndex, 5000); // 1s, 2s, max 5s
+            return Math.min(1000 * 2 ** attemptIndex, 5000);
           }
-          return Math.min(1000 * 2 ** attemptIndex, 30000); // 1s, 2s, 4s, 8s, 16s, max 30s
+          return Math.min(1000 * 2 ** attemptIndex, 30000);
         },
         refetchOnWindowFocus: true,
         refetchOnMount: true,
@@ -36,18 +34,16 @@ function createQueryClient() {
           if (error?.status >= 400 && error?.status < 500) {
             return false;
           }
-          // Retry more times for 500 errors
           if (error?.status >= 500) {
             return failureCount < 4;
           }
           return failureCount < 2;
         },
         retryDelay: (attemptIndex, error: any) => {
-          // Longer delays for 500 errors
           if (error?.status >= 500) {
-            return Math.min(2000 * 2 ** attemptIndex, 60000); // 2s, 4s, 8s, 16s, max 60s
+            return Math.min(2000 * 2 ** attemptIndex, 60000);
           }
-          return Math.min(1000 * 2 ** attemptIndex, 30000); // 1s, 2s, 4s, 8s, max 30s
+          return Math.min(1000 * 2 ** attemptIndex, 30000);
         },
       },
     },

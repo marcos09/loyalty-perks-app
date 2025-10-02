@@ -8,14 +8,10 @@ export interface ErrorInfo {
   statusCode?: number;
 }
 
-/**
- * Analyzes an API error and returns appropriate error information
- */
 export function analyzeApiError(error: unknown): ErrorInfo {
   const apiError = error as ApiError;
   const statusCode = apiError?.status;
 
-  // Network/connection errors
   if (!statusCode || statusCode === 0) {
     return {
       title: 'Connection Error',
@@ -26,7 +22,6 @@ export function analyzeApiError(error: unknown): ErrorInfo {
     };
   }
 
-  // Server errors (5xx)
   if (statusCode >= 500) {
     return {
       title: 'Server Error',
@@ -37,7 +32,6 @@ export function analyzeApiError(error: unknown): ErrorInfo {
     };
   }
 
-  // Client errors (4xx)
   if (statusCode >= 400) {
     switch (statusCode) {
       case 400:
@@ -99,7 +93,6 @@ export function analyzeApiError(error: unknown): ErrorInfo {
     }
   }
 
-  // Unknown error
   return {
     title: 'Unknown Error',
     description: 'An unexpected error occurred. Please try again.',
@@ -109,27 +102,19 @@ export function analyzeApiError(error: unknown): ErrorInfo {
   };
 }
 
-/**
- * Gets a user-friendly error message for display
- */
 export function getErrorMessage(error: unknown): string {
   const apiError = error as ApiError;
   return apiError?.message || String(error) || 'An unknown error occurred';
 }
 
-/**
- * Determines if an error should trigger a retry
- */
 export function shouldRetryError(error: unknown): boolean {
   const apiError = error as ApiError;
   const statusCode = apiError?.status;
 
-  // Retry for network errors and server errors
   if (!statusCode || statusCode === 0 || statusCode >= 500) {
     return true;
   }
 
-  // Retry for specific client errors
   if (statusCode === 408 || statusCode === 429) {
     return true;
   }

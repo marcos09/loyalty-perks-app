@@ -41,6 +41,9 @@ async function fetchBenefits(filters: BenefitsFilters): Promise<BenefitsResponse
   const queryString = buildQueryString(filters);
   const url = queryString ? `/api/benefits?${queryString}` : '/api/benefits';
   const response = await apiClient.get<BenefitsResponse>(url);
+  
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
   return response.data;
 }
 

@@ -16,7 +16,6 @@ export function FilterHeader({ onFiltersPress }: FilterHeaderProps) {
   const { data, total } = useBenefits(appliedFilters);
 
   const handleSearchChange = (query: string) => {
-    // Apply search immediately as user types
     setAppliedFiltersDirect(prev => ({ ...prev, searchQuery: query }));
     setDraftSearchQuery(query);
   };
