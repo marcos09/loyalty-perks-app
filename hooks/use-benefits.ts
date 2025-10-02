@@ -1,4 +1,29 @@
+import { API_BASE_URL, API_ENDPOINTS } from '@/config/api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
+// Day name mapping to handle different formats
+const DAY_MAPPING: Record<string, string> = {
+  // English
+  'Mon': 'Mon',
+  'Tue': 'Tue', 
+  'Wed': 'Wed',
+  'Thu': 'Thu',
+  'Fri': 'Fri',
+  'Sat': 'Sat',
+  'Sun': 'Sun',
+  // Spanish
+  'Lun': 'Mon',
+  'Mar': 'Tue',
+  'Mié': 'Wed',
+  'Jue': 'Thu',
+  'Vie': 'Fri',
+  'Sáb': 'Sat',
+  'Dom': 'Sun',
+};
+
+function normalizeDayName(day: string): string {
+  return DAY_MAPPING[day] || day;
+}
 
 export type Benefit = {
   id: string;
@@ -215,9 +240,20 @@ function generateBenefits(count = 140): Benefit[] {
 }
 
 async function fetchBenefits(): Promise<Benefit[]> {
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-  await delay(600);
-  return generateBenefits(140);
+  try {
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.BENEFITS}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    return result.data || result;
+  } catch (error) {
+    console.error('Failed to fetch benefits:', error);
+    // Fallback to local generation if API fails
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(600);
+    return generateBenefits(140);
+  }
 }
 
 export function useBenefits() {
@@ -256,7 +292,11 @@ export function useBenefits() {
       if (selectedCategory && b.category !== selectedCategory) return false;
       if (onlyActive && new Date(b.expiresAt).getTime() < now) return false;
       if (selectedDays.length > 0) {
-        const hasDay = selectedDays.some((d) => b.validDays.includes(d));
+        const hasDay = selectedDays.some((selectedDay) => 
+          b.validDays.some((validDay) => 
+            normalizeDayName(selectedDay) === normalizeDayName(validDay)
+          )
+        );
         if (!hasDay) return false;
       }
       if (minDiscountPercent !== undefined && minDiscountPercent !== null) {
