@@ -2,7 +2,7 @@ import { useCategories } from '@/hooks/api';
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import type { SortBy } from '@/types';
 import { useTranslation } from 'react-i18next';
-import { Modal, ScrollView } from 'react-native';
+import { Modal, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Container } from '../layout/Container';
 import { ThemedText } from '../themed-text';
@@ -31,7 +31,6 @@ export function FiltersModal({
     draftFilters,
     handleCategoryChange,
     handleDayToggle,
-    handleOnlyActiveChange,
     handleMinDiscountChange,
     handleSortChange,
   } = useFilterActions();
@@ -102,14 +101,6 @@ export function FiltersModal({
               ))}
             </FilterSection>
 
-            <FilterSection title={t('filters.status')}>
-              <FilterChip
-                label={draftFilters.onlyActive ? t('filters.onlyActiveChecked') : t('filters.onlyActive')}
-                selected={!!draftFilters.onlyActive}
-                onPress={() => handleOnlyActiveChange(!draftFilters.onlyActive)}
-              />
-            </FilterSection>
-
             <FilterSection title={t('filters.sortBy')}>
               {SORT_OPTIONS.map((option) => (
                 <FilterChip
@@ -167,7 +158,7 @@ export function FiltersModal({
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   header: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.08)',
@@ -175,4 +166,4 @@ const styles = {
   footer: {
     marginTop: 12,
   },
-};
+});

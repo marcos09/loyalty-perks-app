@@ -1,11 +1,9 @@
-import type { ApiError } from '@/types/api';
+import type { ApiError } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
-import { Container } from '../layout/Container';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '../themed-text';
-import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
+import { ThemedView } from '../themed-view';
 
 interface ErrorStateProps {
   error: unknown;
@@ -85,75 +83,123 @@ export function ErrorState({
   };
 
   return (
-    <Container align="center" justify="center" padding="large">
-      <Card variant="outlined" padding="large">
-        <Container align="center" gap={24}>
-          <Container 
-            align="center" 
-            justify="center"
-            style={styles.iconContainer}
-          >
-            <Ionicons 
-              name={errorInfo.icon} 
-              size={64} 
-              color="rgba(127,127,127,0.6)" 
-            />
-          </Container>
-          
-          <Container align="center" gap={12}>
-            <ThemedText type="title" style={styles.title}>
-              {errorInfo.title}
+    <ThemedView style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.iconContainer}>
+          <Ionicons 
+            name={errorInfo.icon} 
+            size={64} 
+            color="rgba(127,127,127,0.6)" 
+          />
+        </View>
+        
+        <ThemedText type="title" style={styles.title}>
+          {errorInfo.title}
+        </ThemedText>
+        
+        <ThemedText style={styles.description}>
+          {errorInfo.description}
+        </ThemedText>
+
+        {showDetails && error && (
+          <Pressable onPress={handleShowDetails} style={styles.detailsBtn}>
+            <ThemedText type="defaultSemiBold" style={styles.detailsText}>
+              {t('errors.details.show')}
             </ThemedText>
-            
-            <ThemedText style={styles.description}>
-              {errorInfo.description}
+          </Pressable>
+        )}
+
+        {showResetFilters && onResetFilters && (
+          <Pressable onPress={onResetFilters} style={styles.resetFiltersBtn}>
+            <Ionicons name="refresh-outline" size={20} color="#007AFF" style={styles.resetFiltersIcon} />
+            <ThemedText type="defaultSemiBold" style={styles.resetFiltersText}>
+              {t('common.clearFilters')}
             </ThemedText>
-          </Container>
+          </Pressable>
+        )}
 
-          {showDetails && error && (
-            <Button
-              title={t('errors.details.show')}
-              onPress={handleShowDetails}
-              variant="ghost"
-              size="medium"
-            />
-          )}
-
-          <Container gap={12} style={{ width: '100%', maxWidth: 280 }}>
-            {showResetFilters && onResetFilters && (
-              <Button
-                title={t('common.clearFilters')}
-                onPress={onResetFilters}
-                variant="secondary"
-                size="large"
-              />
-            )}
-
-            <Button
-              title={t('common.retry')}
-              onPress={onRetry}
-              variant="primary"
-              size="large"
-            />
-          </Container>
-        </Container>
-      </Card>
-    </Container>
+        <Pressable onPress={onRetry} style={styles.retryBtn}>
+          <Ionicons name="refresh" size={20} color="white" style={styles.retryIcon} />
+          <ThemedText type="defaultSemiBold" style={styles.retryText}>
+            {t('common.retry')}
+          </ThemedText>
+        </Pressable>
+      </View>
+    </ThemedView>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
   iconContainer: {
     marginBottom: 24,
   },
   title: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: 12,
   },
   description: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: 24,
     opacity: 0.7,
     lineHeight: 20,
   },
-};
+  detailsBtn: {
+    marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  detailsText: {
+    color: 'rgba(127,127,127,0.8)',
+    textDecorationLine: 'underline',
+  },
+  retryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  retryIcon: {
+    marginRight: 8,
+  },
+  retryText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  resetFiltersBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  resetFiltersIcon: {
+    marginRight: 8,
+  },
+  resetFiltersText: {
+    color: '#007AFF',
+    fontSize: 16,
+  },
+});

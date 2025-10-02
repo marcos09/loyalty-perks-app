@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { Container } from '../layout/Container';
 import { ThemedText } from '../themed-text';
 
@@ -19,10 +20,10 @@ export function FilterSection({ title, children }: FilterSectionProps) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
   },
-};
+});

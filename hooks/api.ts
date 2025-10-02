@@ -2,8 +2,11 @@ import { API_BASE_URL } from '@/config/api';
 import type { BenefitsResponse, CategoriesResponse, Category, FilterState } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-// Simple API client
+// Simple API client with delay for testing loading states
 async function apiRequest<T>(endpoint: string): Promise<T> {
+  // Add a 1.5 second delay to see loading states (remove in production)
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
   
   if (!response.ok) {

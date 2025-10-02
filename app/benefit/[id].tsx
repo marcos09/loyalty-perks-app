@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BenefitDetailHeader } from '@/components/benefit-detail-header';
 import { BenefitDetailSections } from '@/components/benefit-detail-sections';
-import { ErrorState } from '@/components/error-state';
+import { ErrorState } from '@/components/screens/ErrorState';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { API_BASE_URL } from '@/config/api';
@@ -13,6 +13,9 @@ import type { Benefit } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 async function fetchBenefit(id: string): Promise<Benefit> {
+  // Add a 1.5 second delay to see loading states (remove in production)
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
   const response = await fetch(`${API_BASE_URL}/api/benefits/${id}`);
   
   if (!response.ok) {

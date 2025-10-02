@@ -1,44 +1,72 @@
-import { ScrollView } from 'react-native';
-import { Container } from '../layout/Container';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedView } from '../themed-view';
-import { Card } from '../ui/Card';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton, SkeletonText } from '../ui/skeleton';
 
 export function LoadingSkeleton() {
   return (
     <ThemedView style={{ flex: 1 }}>
-      {/* Header Skeleton */}
-      <Container padding="medium" gap={6}>
+      <ThemedView style={styles.header}>
         <Skeleton width={160} height={22} />
-        <Skeleton width={120} height={14} />
-      </Container>
+        <Skeleton width={120} height={14} style={{ marginTop: 6 }} />
+      </ThemedView>
 
-      {/* Filters Skeleton */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
-        contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: 8, gap: 8 }}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton key={i} width={80} height={32} radius={999} />
         ))}
       </ScrollView>
 
-      {/* Benefits List Skeleton */}
-      <Container padding="medium" gap={12}>
+      <View style={{ padding: 12, gap: 12 }}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={i} variant="default" padding="medium">
-            <Container direction="row" gap={12} align="center">
+          <View key={i} style={styles.card}>
+            <View style={styles.row}>
               <Skeleton width={76} height={76} radius={12} />
-              <Container style={{ flex: 1 }} gap={6}>
-                <Skeleton width="80%" height={16} />
-                <Skeleton width="95%" height={12} />
-                <Skeleton width="60%" height={12} />
-              </Container>
-            </Container>
-          </Card>
+              <View style={styles.info}>
+                <Skeleton width={'80%'} height={16} />
+                <SkeletonText lines={2} width={'95%'} lineHeight={12} />
+                <View style={styles.metaRow}>
+                  <Skeleton width={80} height={12} />
+                </View>
+              </View>
+            </View>
+          </View>
         ))}
-      </Container>
+      </View>
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
+    gap: 4,
+  },
+  filters: {
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    gap: 8,
+  },
+  card: {
+    minHeight: 100,
+    borderRadius: 14,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(0,0,0,0.04)'
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 12,
+    alignItems: 'center',
+  },
+  info: {
+    flex: 1,
+    gap: 6,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+});

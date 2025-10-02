@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { StyleSheet } from 'react-native';
 import { Container } from '../layout/Container';
 import { ThemedText } from '../themed-text';
 import { Button } from '../ui/Button';
@@ -57,7 +58,7 @@ export function EmptyState({ onClearFilters }: EmptyStateProps) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   iconContainer: {
     width: 100,
     height: 100,
@@ -70,15 +71,15 @@ const styles = {
     fontSize: 40,
   },
   title: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     fontSize: 20,
     fontWeight: '600',
   },
   description: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     opacity: 0.7,
     lineHeight: 22,
     fontSize: 16,
     maxWidth: 280,
   },
-};
+});

@@ -1,6 +1,6 @@
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import type { SortBy } from '@/types';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { ThemedView } from '../themed-view';
 import { Button } from '../ui/Button';
 import { FilterChip } from './FilterChip';
@@ -11,7 +11,6 @@ export function FiltersState() {
     handleSearchChange,
     handleCategoryChange,
     handleDayToggle,
-    handleOnlyActiveChange,
     handleMinDiscountChange,
     handleSortChange,
     handleClearFilters,
@@ -20,7 +19,6 @@ export function FiltersState() {
   const {
     selectedCategory,
     selectedDays,
-    onlyActive,
     minDiscountPercent,
     sortBy,
     searchQuery,
@@ -37,7 +35,6 @@ export function FiltersState() {
   const hasAnyFilters = 
     selectedCategory || 
     selectedDays.length > 0 || 
-    onlyActive || 
     minDiscountPercent !== undefined || 
     sortBy !== 'relevance' ||
     searchQuery.trim().length > 0;
@@ -56,12 +53,14 @@ export function FiltersState() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        style={styles.scrollView}
       >
         {searchQuery.trim().length > 0 && (
           <FilterChip
             label={`Search: "${searchQuery}"`}
             selected={false}
             onPress={() => handleSearchChange('')}
+            style={styles.chip}
           />
         )}
         
@@ -70,6 +69,7 @@ export function FiltersState() {
             label={`Category: ${selectedCategory}`}
             selected={false}
             onPress={() => handleCategoryChange(undefined)}
+            style={styles.chip}
           />
         )}
         
@@ -78,14 +78,7 @@ export function FiltersState() {
             label={`Days: ${selectedDays.join(', ')}`}
             selected={false}
             onPress={() => handleDayToggle(selectedDays[0])}
-          />
-        )}
-        
-        {onlyActive && (
-          <FilterChip
-            label="Active only ✓"
-            selected={false}
-            onPress={() => handleOnlyActiveChange(false)}
+            style={styles.chip}
           />
         )}
         
@@ -94,6 +87,7 @@ export function FiltersState() {
             label={`Min discount: ${minDiscountPercent}%`}
             selected={false}
             onPress={() => handleMinDiscountChange(undefined)}
+            style={styles.chip}
           />
         )}
         
@@ -102,6 +96,7 @@ export function FiltersState() {
             label={`Sort: ${getSortLabel(sortBy)}`}
             selected={false}
             onPress={() => handleSortChange('relevance')}
+            style={styles.chip}
           />
         )}
         
@@ -110,19 +105,30 @@ export function FiltersState() {
           onPress={handleClearFilters}
           variant="ghost"
           size="small"
+          style={styles.clearButton}
         />
       </ScrollView>
     </ThemedView>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
+  scrollView: {
+    flexGrow: 0,
+  },
   scrollContent: {
-    gap: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingRight: 16,
   },
-};
+  chip: {
+    marginRight: 8,
+  },
+  clearButton: {
+    marginLeft: 8,
+  },
+});
