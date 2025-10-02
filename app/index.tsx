@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,13 +7,14 @@ import { FiltersContainer } from '@/components/filters-container';
 import { LoadingSkeleton } from '@/components/loading-skeleton';
 import { ThemedView } from '@/components/themed-view';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/api/use-benefits';
+import { useBenefits } from '@/hooks/api';
 import { analyzeApiError } from '@/utils/error-handler';
 
 export default function BenefitsScreen() {
-  const router = useRouter();
   const { appliedFilters, clearFilters } = useFilterContext();
-  const { loading, error, refetch, data } = useBenefits(appliedFilters);
+  const { data, isLoading: loading, error, refetch } = useBenefits(appliedFilters);
+  
+  const benefits = data?.pages.flatMap(page => page.data) ?? [];
   const previousErrorRef = useRef<unknown>(null);
 
   useEffect(() => {
@@ -39,22 +39,8 @@ export default function BenefitsScreen() {
     clearFilters();
   };
 
-  const handleNavigateToErrorPage = () => {
-    const errorInfo = analyzeApiError(error);
-    
-    router.push({
-      pathname: '/error',
-      params: {
-        error: String(error),
-        title: errorInfo.title,
-        description: errorInfo.description,
-        statusCode: errorInfo.statusCode?.toString(),
-        showDetails: __DEV__ ? 'true' : 'false',
-      },
-    });
-  };
 
-  if (loading && data.length === 0) {
+  if (loading && benefits.length === 0) {
     return (
       <ThemedView style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1 }}>

@@ -4,7 +4,7 @@ import { FiltersState } from '@/components/filters-state';
 import { ScreenHeader } from '@/components/screen-header';
 import { SearchBar } from '@/components/search-bar';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/api/use-benefits';
+import { useBenefits } from '@/hooks/api';
 
 interface FilterHeaderProps {
   onFiltersPress: () => void;
@@ -13,7 +13,10 @@ interface FilterHeaderProps {
 export function FilterHeader({ onFiltersPress }: FilterHeaderProps) {
   const { t } = useTranslation();
   const { appliedFilters, setAppliedFiltersDirect, setDraftSearchQuery } = useFilterContext();
-  const { data, total } = useBenefits(appliedFilters);
+  const { data } = useBenefits(appliedFilters);
+  
+  const benefits = data?.pages.flatMap(page => page.data) ?? [];
+  const total = data?.pages[0]?.total ?? benefits.length;
 
   const handleSearchChange = (query: string) => {
     setAppliedFiltersDirect(prev => ({ ...prev, searchQuery: query }));
@@ -24,7 +27,7 @@ export function FilterHeader({ onFiltersPress }: FilterHeaderProps) {
     <>
       <ScreenHeader 
         title={t('benefits.title')} 
-        subtitle={`${data.length} / ${total} ${t('common.results')}`} 
+        subtitle={`${benefits.length} / ${total} ${t('common.results')}`} 
       />
 
       <SearchBar 

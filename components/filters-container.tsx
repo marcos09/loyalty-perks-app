@@ -5,7 +5,7 @@ import { useFilterLogic } from '@/components/filter-logic';
 import { FiltersModal } from '@/components/filters-modal';
 import { FiltersSidebar } from '@/components/filters-sidebar';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/api/use-benefits';
+import { useCategories } from '@/hooks/api';
 import { useResponsive } from '@/hooks/use-responsive';
 
 interface FiltersContainerProps {
@@ -17,7 +17,6 @@ export function FiltersContainer({ children }: FiltersContainerProps) {
   const [filtersVisible, setFiltersVisible] = useState(false);
   
   const {
-    appliedFilters,
     draftFilters,
     setDraftCategory,
     setDraftSearchQuery,
@@ -30,7 +29,7 @@ export function FiltersContainer({ children }: FiltersContainerProps) {
     resetDraftToApplied,
   } = useFilterContext();
 
-  const { categories } = useBenefits(appliedFilters);
+  const { data: categories = [] } = useCategories();
 
   const {
     WEEKDAYS,

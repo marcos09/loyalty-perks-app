@@ -4,7 +4,7 @@ import { BenefitCard } from '@/components/benefit-card';
 import { EmptyState } from '@/components/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useFilterContext } from '@/contexts/filter-context';
-import { useBenefits } from '@/hooks/api/use-benefits';
+import { useBenefits } from '@/hooks/api';
 
 interface BenefitsListProps {
   onClearFilters: () => void;
@@ -12,7 +12,16 @@ interface BenefitsListProps {
 
 export function BenefitsList({ onClearFilters }: BenefitsListProps) {
   const { appliedFilters } = useFilterContext();
-  const { filtered, loading, loadingMore, loadMore } = useBenefits(appliedFilters);
+  const { 
+    data, 
+    isLoading: loading, 
+    isFetchingNextPage: loadingMore,
+    hasNextPage,
+    fetchNextPage 
+  } = useBenefits(appliedFilters);
+  
+  // Flatten all pages into a single array
+  const filtered = data?.pages.flatMap(page => page.data) ?? [];
   
   console.log('BenefitsList render:', { loading, filteredLength: filtered.length });
   
@@ -23,6 +32,12 @@ export function BenefitsList({ onClearFilters }: BenefitsListProps) {
     appliedFilters.minDiscountPercent !== undefined ||
     appliedFilters.sortBy !== 'relevance' ||
     appliedFilters.searchQuery.trim().length > 0;
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !loadingMore) {
+      fetchNextPage();
+    }
+  };
   if (loading && filtered.length === 0) {
     return (
       <View style={styles.container}>
@@ -54,7 +69,7 @@ export function BenefitsList({ onClearFilters }: BenefitsListProps) {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => <BenefitCard benefit={item} />}
-        onEndReached={loadMore}
+        onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListEmptyComponent={
           filtered.length === 0 && hasAppliedFilters && !loading ? (

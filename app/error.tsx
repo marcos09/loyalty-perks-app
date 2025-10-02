@@ -3,11 +3,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ErrorState } from '@/components/error-state';
 import { ThemedView } from '@/components/themed-view';
-import { useFilterContext } from '@/contexts/filter-context';
 
 export default function ErrorPage() {
   const router = useRouter();
-  const { clearFilters } = useFilterContext();
   const params = useLocalSearchParams<{
     error?: string;
     title?: string;
@@ -26,9 +24,6 @@ export default function ErrorPage() {
     router.replace('/');
   };
 
-  const handleGoHome = () => {
-    router.replace('/');
-  };
 
   const isApiError = statusCode && (statusCode.startsWith('4') || statusCode.startsWith('5'));
   const getApiErrorMessage = () => {

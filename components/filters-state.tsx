@@ -14,10 +14,7 @@ export interface FilterState {
   searchQuery: string;
 }
 
-export interface FiltersStateProps {
-}
-
-export function FiltersState({}: FiltersStateProps) {
+export function FiltersState() {
   const {
     appliedFilters,
     setDraftCategory,

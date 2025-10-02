@@ -8,13 +8,36 @@ import { BenefitDetailSections } from '@/components/benefit-detail-sections';
 import { ErrorState } from '@/components/error-state';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useBenefit } from '@/hooks/api/use-benefit';
+import { API_BASE_URL } from '@/config/api';
+import type { Benefit } from '@/types';
+import { useQuery } from '@tanstack/react-query';
+
+async function fetchBenefit(id: string): Promise<Benefit> {
+  const response = await fetch(`${API_BASE_URL}/api/benefits/${id}`);
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Benefit not found');
+  }
+  
+  return result.data;
+}
 
 export default function BenefitDetailScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
-  const { data: benefit, loading, error, refetch } = useBenefit(params?.id);
+  
+  const { data: benefit, isLoading: loading, error, refetch } = useQuery({
+    queryKey: ['benefit', params?.id],
+    queryFn: () => fetchBenefit(params!.id!),
+    enabled: !!params?.id,
+  });
 
   return (
     <ThemedView style={{ flex: 1 }}>
