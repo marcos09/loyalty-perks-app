@@ -1,5 +1,6 @@
 import { API_BASE_URL, API_ENDPOINTS } from '@/config/api';
-import { useCallback, useEffect, useState } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 export type Benefit = {
   id: string;
@@ -128,121 +129,74 @@ export function useBenefits(appliedFilters: {
   minDiscountPercent?: number;
   sortBy: SortBy;
 }) {
-  const [data, setData] = useState<Benefit[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [total, setTotal] = useState(0);
-
-  const loadCategories = useCallback(async () => {
-    try {
-      const cats = await fetchCategories();
-      setCategories(cats);
-    } catch (e) {
-      console.error('Failed to load categories:', e);
+  // Build query key for caching
+  const queryKey = [
+    'benefits',
+    {
+      category: appliedFilters.selectedCategory,
+      search: appliedFilters.searchQuery,
+      days: appliedFilters.selectedDays.sort(), // Sort to ensure consistent cache keys
+      onlyActive: appliedFilters.onlyActive,
+      minDiscountPercent: appliedFilters.minDiscountPercent,
+      sortBy: appliedFilters.sortBy,
     }
-  }, []);
+  ];
 
-  useEffect(() => {
-    const load = async () => {
-      console.log('useBenefits: Starting load with filters:', appliedFilters);
-      setLoading(true);
-      setError(null);
-      setCurrentPage(1);
-      setHasMore(true);
-      // Don't clear data immediately - let the loading state show with previous data
-      try {
-        const filters = {
-          category: appliedFilters.selectedCategory,
-          search: appliedFilters.searchQuery,
-          days: appliedFilters.selectedDays,
-          onlyActive: appliedFilters.onlyActive,
-          minDiscountPercent: appliedFilters.minDiscountPercent,
-          sortBy: appliedFilters.sortBy,
-          page: 1,
-          limit: 20,
-        };
-        
-        console.log('useBenefits: Fetching with filters:', filters);
-        const res = await fetchBenefits(filters);
-        console.log('useBenefits: Got response:', res);
-        setData(res.data);
-        setTotal(res.total);
-        setHasMore(res.data.length < res.total);
-      } catch (e) {
-        console.error('useBenefits: Error:', e);
-        setError(e);
-      } finally {
-        console.log('useBenefits: Setting loading to false');
-        setLoading(false);
-      }
-    };
+  // Fetch categories with React Query
+  const {
+    data: categories = [],
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+    staleTime: 10 * 60 * 1000, // 10 minutes - categories change less frequently
+    gcTime: 30 * 60 * 1000, // 30 minutes
+  });
 
-    load();
-  }, [appliedFilters]);
+  // Use infinite query for pagination
+  const {
+    data: infiniteData,
+    isLoading: loading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage: loadingMore,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: [...queryKey, 'infinite'],
+    queryFn: ({ pageParam = 1 }) => {
+      console.log('useBenefits: Fetching with filters:', appliedFilters);
+      const filters = {
+        category: appliedFilters.selectedCategory,
+        search: appliedFilters.searchQuery,
+        days: appliedFilters.selectedDays,
+        onlyActive: appliedFilters.onlyActive,
+        minDiscountPercent: appliedFilters.minDiscountPercent,
+        sortBy: appliedFilters.sortBy,
+        page: pageParam as number,
+        limit: 20,
+      };
+      
+      return fetchBenefits(filters);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      const totalLoaded = pages.reduce((acc, page) => acc + page.data.length, 0);
+      return totalLoaded < lastPage.total ? pages.length + 1 : undefined;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
 
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+  // Flatten all pages data
+  const data = infiniteData?.pages.flatMap(page => page.data) ?? [];
+  const total = infiniteData?.pages[0]?.total ?? 0;
+  const hasMore = hasNextPage ?? false;
 
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasMore) return;
-    
-    setLoadingMore(true);
-    try {
-      const nextPage = currentPage + 1;
-      const filters = {
-        category: appliedFilters.selectedCategory,
-        search: appliedFilters.searchQuery,
-        days: appliedFilters.selectedDays,
-        onlyActive: appliedFilters.onlyActive,
-        minDiscountPercent: appliedFilters.minDiscountPercent,
-        sortBy: appliedFilters.sortBy,
-        page: nextPage,
-        limit: 20,
-      };
-      
-      const res = await fetchBenefits(filters);
-      setData(prev => [...prev, ...res.data]);
-      setCurrentPage(nextPage);
-      setHasMore(res.data.length === 20 && (data.length + res.data.length) < res.total);
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoadingMore(false);
+    if (hasMore && !loadingMore) {
+      await fetchNextPage();
     }
-  }, [appliedFilters, currentPage, hasMore, loadingMore, data.length]);
-
-  const refetch = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setCurrentPage(1);
-    setHasMore(true);
-    try {
-      const filters = {
-        category: appliedFilters.selectedCategory,
-        search: appliedFilters.searchQuery,
-        days: appliedFilters.selectedDays,
-        onlyActive: appliedFilters.onlyActive,
-        minDiscountPercent: appliedFilters.minDiscountPercent,
-        sortBy: appliedFilters.sortBy,
-        page: 1,
-        limit: 20,
-      };
-      
-      const res = await fetchBenefits(filters);
-      setData(res.data);
-      setTotal(res.total);
-      setHasMore(res.data.length < res.total);
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [appliedFilters]);
+  }, [hasMore, loadingMore, fetchNextPage]);
 
   return {
     data,
@@ -260,34 +214,24 @@ export function useBenefits(appliedFilters: {
 }
 
 export function useBenefit(id: string | undefined) {
-  const [data, setData] = useState<Benefit | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-
-  const load = useCallback(async () => {
-    if (!id) return;
-    
-    setLoading(true);
-    setError(null);
-    try {
-      const benefit = await fetchBenefitById(id);
-      setData(benefit);
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const {
+    data,
+    isLoading: loading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['benefit', id],
+    queryFn: () => fetchBenefitById(id!),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
 
   return {
     data,
     loading,
     error,
-    refetch: load,
+    refetch,
   };
 }
 
