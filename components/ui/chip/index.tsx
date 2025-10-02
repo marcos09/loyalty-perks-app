@@ -1,5 +1,5 @@
-import { ThemedText } from '@/components/themed-text';
-import { Pressable, type PressableProps } from 'react-native';
+import { ThemedText } from '@/components/shared/themed-text';
+import { Pressable, type PressableProps, type ViewStyle } from 'react-native';
 import { styles } from './styles';
 
 export interface ChipProps extends Omit<PressableProps, 'style'> {
@@ -8,7 +8,7 @@ export interface ChipProps extends Omit<PressableProps, 'style'> {
   variant?: 'default' | 'filter' | 'status';
   size?: 'small' | 'medium' | 'large';
   onPress?: () => void;
-  style?: PressableProps['style'];
+  style?: ViewStyle;
 }
 
 export function Chip({

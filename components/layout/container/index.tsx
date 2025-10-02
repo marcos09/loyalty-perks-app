@@ -35,8 +35,8 @@ export function Container({
           gap,
           flexWrap: wrap ? 'wrap' : 'nowrap',
         },
-        styles[`padding${padding.charAt(0).toUpperCase() + padding.slice(1)}`],
-        styles[`margin${margin.charAt(0).toUpperCase() + margin.slice(1)}`],
+        styles[`padding${padding.charAt(0).toUpperCase() + padding.slice(1)}` as keyof typeof styles],
+        styles[`margin${margin.charAt(0).toUpperCase() + margin.slice(1)}` as keyof typeof styles],
         style,
       ]}
       {...props}

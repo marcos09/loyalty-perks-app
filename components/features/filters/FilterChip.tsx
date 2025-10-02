@@ -1,11 +1,11 @@
-import { PressableProps } from 'react-native';
-import { Chip } from '../ui/chip';
+import { Chip } from '@/components/ui/chip';
+import { ViewStyle } from 'react-native';
 
 interface FilterChipProps {
   label: string;
   selected: boolean;
   onPress: () => void;
-  style?: PressableProps['style'];
+  style?: ViewStyle;
 }
 
 export function FilterChip({ label, selected, onPress, style }: FilterChipProps) {

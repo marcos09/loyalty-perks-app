@@ -1,8 +1,8 @@
+import { Container } from "@/components/layout/container";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useBenefitsData } from "@/hooks/use-benefits-data";
 import { FlatList } from "react-native";
-import { Container } from "../../layout/container";
-import { Card } from "../../ui/card";
-import { Skeleton } from "../../ui/skeleton";
 import { BenefitCard } from "../benefit-card";
 import { EmptyState } from "../empty-state";
 import { LoadingSkeleton } from "../loading-skeleton";

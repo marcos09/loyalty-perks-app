@@ -1,4 +1,4 @@
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/shared/themed-text';
 import { TextInput, View, type TextInputProps } from 'react-native';
 import { styles } from './styles';
 

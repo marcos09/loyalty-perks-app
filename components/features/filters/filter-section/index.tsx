@@ -1,5 +1,5 @@
 import { Container } from '@/components/layout/container';
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/shared/themed-text';
 import { styles } from './styles';
 
 interface FilterSectionProps {

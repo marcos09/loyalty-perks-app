@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ErrorState } from '@/components/screens/error-state';
+import { ErrorState } from '@/components/screens/error/error-state';
 
 export default function ErrorPage() {
   const router = useRouter();

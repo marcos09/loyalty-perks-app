@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/shared/themed-text';
 import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
 import type { Benefit } from '@/types';
 import { styles } from './styles';

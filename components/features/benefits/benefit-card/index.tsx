@@ -1,9 +1,9 @@
+import { Container } from '@/components/layout/container';
+import { ThemedText } from '@/components/shared/themed-text';
+import { Card } from '@/components/ui/card';
 import type { Benefit } from '@/types';
 import { Link } from 'expo-router';
 import { ImageBackground, Pressable } from 'react-native';
-import { Container } from '../../layout/container';
-import { ThemedText } from '../../themed-text';
-import { Card } from '../../ui/card';
 import { styles } from './styles';
 
 interface BenefitCardProps {

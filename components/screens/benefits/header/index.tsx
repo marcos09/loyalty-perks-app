@@ -1,10 +1,10 @@
+import { ThemedText } from '@/components/shared/themed-text';
 import { useBenefitsData } from '@/hooks/use-benefits-data';
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '../../themed-text';
 import { styles } from './styles';
 
 interface BenefitsHeaderProps {

@@ -2,12 +2,12 @@ import { useBenefitsData } from "@/hooks/use-benefits-data";
 import { useFilterActions } from "@/hooks/use-filter-actions";
 import { analyzeApiError } from "@/utils/error-handler";
 import { useState } from "react";
-import { BenefitsList } from "../components/benefits/benefits-list";
-import { LoadingSkeleton } from "../components/benefits/loading-skeleton";
-import { FiltersModal } from "../components/filters/filters-modal";
-import { FiltersState } from "../components/filters/filters-state";
-import { BenefitsHeader } from "../components/screens/benefits-header";
-import { ErrorState } from "../components/screens/error-state";
+import { BenefitsList } from "../components/features/benefits/benefits-list";
+import { LoadingSkeleton } from "../components/features/benefits/loading-skeleton";
+import { FiltersModal } from "../components/features/filters/filters-modal";
+import { FiltersState } from "../components/features/filters/filters-state";
+import { BenefitsHeader } from "../components/screens/benefits/header";
+import { ErrorState } from "../components/screens/error/error-state";
 
 export default function BenefitsScreenPage() {
   const { benefits, loading, error, refetch: handleErrorRetry } = useBenefitsData();

@@ -2,7 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ErrorState } from '../screens/error-state';
+import { ErrorState } from '../../screens/error/error-state';
 import { styles } from './styles';
 
 interface Props {

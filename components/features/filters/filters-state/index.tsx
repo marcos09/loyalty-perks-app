@@ -1,7 +1,7 @@
+import { Button } from '@/components/ui/button';
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import type { SortBy } from '@/types';
 import { ScrollView, View } from 'react-native';
-import { Button } from '../../ui/button';
 import { FilterChip } from '../FilterChip';
 import { styles } from './styles';
 

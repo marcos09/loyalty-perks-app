@@ -1,8 +1,8 @@
-import { ThemedText } from "@/components/themed-text";
+import { ThemedText } from "@/components/shared/themed-text";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, View } from "react-native";
-import { styles } from "./styles";
+import { styles } from './ErrorState.styles';
 
 interface ErrorStateProps {
   error: unknown;
@@ -27,7 +27,7 @@ export function ErrorState({
 
   const getErrorInfo = () => {
     if (error && typeof error === "object" && "status" in error) {
-      const apiError = error as { status: number };
+      const apiError = error as any;
       const status = apiError.status;
 
       if (status === 404) {
@@ -80,56 +80,59 @@ export function ErrorState({
   };
 
   return (
-    <View style={styles.content}>
-      <View style={styles.iconContainer}>
-        <Ionicons
-          name={errorInfo.icon}
-          size={64}
-          color="rgba(127,127,127,0.6)"
-        />
-      </View>
-
-      <ThemedText type="title" style={styles.title}>
-        {errorInfo.title}
-      </ThemedText>
-
-      <ThemedText style={styles.description}>
-        {errorInfo.description}
-      </ThemedText>
-
-      {showDetails && Boolean(error) && (
-        <Pressable onPress={handleShowDetails} style={styles.detailsBtn}>
-          <ThemedText type="defaultSemiBold" style={styles.detailsText}>
-            {t("errors.details.show")}
-          </ThemedText>
-        </Pressable>
-      )}
-
-      {showResetFilters && onResetFilters && (
-        <Pressable onPress={onResetFilters} style={styles.resetFiltersBtn}>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.iconContainer}>
           <Ionicons
-            name="refresh-outline"
-            size={20}
-            color="#007AFF"
-            style={styles.resetFiltersIcon}
+            name={errorInfo.icon}
+            size={64}
+            color="rgba(127,127,127,0.6)"
           />
-          <ThemedText type="defaultSemiBold" style={styles.resetFiltersText}>
-            {t("common.clearFilters")}
+        </View>
+
+        <ThemedText type="title" style={styles.title}>
+          {errorInfo.title}
+        </ThemedText>
+
+        <ThemedText style={styles.description}>
+          {errorInfo.description}
+        </ThemedText>
+
+        {showDetails && Boolean(error) && (
+          <Pressable onPress={handleShowDetails} style={styles.detailsBtn}>
+            <ThemedText type="defaultSemiBold" style={styles.detailsText}>
+              {t("errors.details.show")}
+            </ThemedText>
+          </Pressable>
+        )}
+
+        {showResetFilters && onResetFilters && (
+          <Pressable onPress={onResetFilters} style={styles.resetFiltersBtn}>
+            <Ionicons
+              name="refresh-outline"
+              size={20}
+              color="#007AFF"
+              style={styles.resetFiltersIcon}
+            />
+            <ThemedText type="defaultSemiBold" style={styles.resetFiltersText}>
+              {t("common.clearFilters")}
+            </ThemedText>
+          </Pressable>
+        )}
+
+        <Pressable onPress={onRetry} style={styles.retryBtn}>
+          <Ionicons
+            name="refresh"
+            size={20}
+            color="white"
+            style={styles.retryIcon}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.retryText}>
+            {t("common.retry")}
           </ThemedText>
         </Pressable>
-      )}
-
-      <Pressable onPress={onRetry} style={styles.retryBtn}>
-        <Ionicons
-          name="refresh"
-          size={20}
-          color="white"
-          style={styles.retryIcon}
-        />
-        <ThemedText type="defaultSemiBold" style={styles.retryText}>
-          {t("common.retry")}
-        </ThemedText>
-      </Pressable>
+      </View>
     </View>
   );
 }
+

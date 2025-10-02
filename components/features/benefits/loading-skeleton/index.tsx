@@ -1,6 +1,6 @@
+import { Skeleton, SkeletonText } from '@/components/ui/skeleton';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Skeleton, SkeletonText } from '../../ui/skeleton';
 import { styles } from './styles';
 
 export function LoadingSkeleton() {

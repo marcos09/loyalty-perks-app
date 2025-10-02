@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorBoundary } from '@/components/error-boundary';
+import { ErrorBoundary } from '@/components/shared/error-boundary';
 import { FilterProvider } from '@/contexts/filter-context';
 import { QueryClientProviderWrapper } from '@/contexts/query-client-provider';
 

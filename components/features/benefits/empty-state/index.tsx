@@ -1,8 +1,8 @@
+import { Container } from '@/components/layout/container';
+import { ThemedText } from '@/components/shared/themed-text';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
-import { Container } from '../../layout/container';
-import { ThemedText } from '../../themed-text';
-import { Button } from '../../ui/button';
-import { Card } from '../../ui/card';
 import { styles } from './styles';
 
 interface EmptyStateProps {
