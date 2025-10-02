@@ -1,8 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ErrorState } from '@/components/screens/ErrorState';
-import { ThemedView } from '@/components/themed-view';
+import { ErrorState } from '@/components/screens/error-state';
 
 export default function ErrorPage() {
   const router = useRouter();
@@ -45,16 +44,14 @@ export default function ErrorPage() {
   const finalDescription = isApiError ? getApiErrorMessage() : description;
 
   return (
-    <ThemedView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ErrorState
-          error={error}
-          onRetry={handleRetry}
-          title={title}
-          description={finalDescription}
-          showDetails={showDetails}
-        />
-      </SafeAreaView>
-    </ThemedView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ErrorState
+        error={error}
+        onRetry={handleRetry}
+        title={title}
+        description={finalDescription}
+        showDetails={showDetails}
+      />
+    </SafeAreaView>
   );
 }

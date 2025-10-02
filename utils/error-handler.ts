@@ -1,4 +1,4 @@
-import type { ApiError } from '@/types/api';
+import type { ApiError } from '@/types';
 
 export interface ErrorInfo {
   title: string;

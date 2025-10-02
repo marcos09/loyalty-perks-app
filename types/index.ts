@@ -23,6 +23,12 @@ export interface BaseApiResponse {
   success: boolean;
 }
 
+export interface ApiError {
+  status: number;
+  message: string;
+  data?: any;
+}
+
 export interface BenefitsResponse extends BaseApiResponse {
   data: Benefit[];
   total: number;

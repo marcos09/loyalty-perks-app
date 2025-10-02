@@ -19,9 +19,12 @@ export function useFilterActions() {
   } = useFilterContext();
 
   const handleSearchChange = useCallback((query: string) => {
-    setAppliedFiltersDirect(prev => ({ ...prev, searchQuery: query }));
     setDraftSearchQuery(query);
-  }, [setAppliedFiltersDirect, setDraftSearchQuery]);
+  }, [setDraftSearchQuery]);
+
+  const handleSearchApply = useCallback(() => {
+    setAppliedFiltersDirect(prev => ({ ...prev, searchQuery: draftFilters.searchQuery }));
+  }, [setAppliedFiltersDirect, draftFilters.searchQuery]);
 
   const handleCategoryChange = useCallback((category: string | undefined) => {
     setDraftCategory(category);
@@ -66,6 +69,7 @@ export function useFilterActions() {
     
     // Actions
     handleSearchChange,
+    handleSearchApply,
     handleCategoryChange,
     handleDayToggle,
     handleOnlyActiveChange,
