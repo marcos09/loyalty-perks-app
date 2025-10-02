@@ -47,6 +47,13 @@ export type Benefit = {
   expiresAt: string;
 };
 
+export type SortBy =
+  | 'relevance'
+  | 'expiresAsc'
+  | 'expiresDesc'
+  | 'discountDesc'
+  | 'titleAsc';
+
 const CATEGORIES = [
   'Comida',
   'Café',
@@ -131,6 +138,48 @@ function randomFrom<T>(arr: T[], indexSeed: number) {
   return arr[indexSeed % arr.length];
 }
 
+function parsePercentDiscount(discount: string): number | null {
+  const match = discount.match(/(\d+)\s?%/);
+  if (!match) return null;
+  return Number(match[1]);
+}
+
+function compareBySort(a: Benefit, b: Benefit, sortBy: SortBy, query: string): number {
+  switch (sortBy) {
+    case 'titleAsc':
+      return a.title.localeCompare(b.title);
+    case 'expiresAsc': {
+      return new Date(a.expiresAt).getTime() - new Date(b.expiresAt).getTime();
+    }
+    case 'expiresDesc': {
+      return new Date(b.expiresAt).getTime() - new Date(a.expiresAt).getTime();
+    }
+    case 'discountDesc': {
+      const ad = parsePercentDiscount(a.discount) ?? -1;
+      const bd = parsePercentDiscount(b.discount) ?? -1;
+      return bd - ad;
+    }
+    case 'relevance':
+    default: {
+      // Simple relevance: title startsWith > includes, category match boosts
+      const q = query.trim().toLowerCase();
+      if (!q) return 0;
+      const aTitle = a.title.toLowerCase();
+      const bTitle = b.title.toLowerCase();
+      const aStarts = aTitle.startsWith(q) ? 1 : 0;
+      const bStarts = bTitle.startsWith(q) ? 1 : 0;
+      if (aStarts !== bStarts) return bStarts - aStarts;
+      const aIncl = aTitle.includes(q) ? 1 : 0;
+      const bIncl = bTitle.includes(q) ? 1 : 0;
+      if (aIncl !== bIncl) return bIncl - aIncl;
+      const aCat = a.category.toLowerCase().includes(q) ? 1 : 0;
+      const bCat = b.category.toLowerCase().includes(q) ? 1 : 0;
+      if (aCat !== bCat) return bCat - aCat;
+      return 0;
+    }
+  }
+}
+
 function generateBenefits(count = 140): Benefit[] {
   const arr: Benefit[] = [];
   const discountLabels = [
@@ -175,7 +224,10 @@ function generateBenefits(count = 140): Benefit[] {
     expires.setDate(expires.getDate() + 7 + ((i * 3) % 45));
 
     const daysCount = 3 + ((i + 1) % 4);
-    const validDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].slice(0, daysCount);
+    const allDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    // Randomly select days instead of always taking the first N days
+    const shuffledDays = [...allDays].sort(() => Math.random() - 0.5);
+    const validDays = shuffledDays.slice(0, daysCount);
 
     const desc = [
       `${brand.name} te ofrece ${discount.toLowerCase()} en ${category.toLowerCase()}.`,
@@ -211,6 +263,11 @@ export function useBenefits() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [onlyActive, setOnlyActive] = useState(false);
+  const [minDiscountPercent, setMinDiscountPercent] = useState<number | undefined>();
+  const [sortBy, setSortBy] = useState<SortBy>('relevance');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -230,9 +287,31 @@ export function useBenefits() {
   }, [load]);
 
   const filtered = useMemo(() => {
-    if (!selectedCategory) return data;
-    return data.filter((b) => b.category === selectedCategory);
-  }, [data, selectedCategory]);
+    const now = Date.now();
+    const query = searchQuery.trim().toLowerCase();
+
+    const base = data.filter((b) => {
+      if (selectedCategory && b.category !== selectedCategory) return false;
+      if (onlyActive && new Date(b.expiresAt).getTime() < now) return false;
+      if (selectedDays.length > 0) {
+        const hasDay = selectedDays.some((d) => b.validDays.includes(d));
+        if (!hasDay) return false;
+      }
+      if (minDiscountPercent !== undefined && minDiscountPercent !== null) {
+        const percent = parsePercentDiscount(b.discount);
+        if (percent === null || percent < minDiscountPercent) return false;
+      }
+
+      if (!query) return true;
+
+      const hay = `${b.title}\n${b.category}\n${b.description}`.toLowerCase();
+      return hay.includes(query);
+    });
+
+    if (sortBy === 'relevance' && !query) return base;
+
+    return [...base].sort((a, b) => compareBySort(a, b, sortBy, query));
+  }, [data, selectedCategory, searchQuery, selectedDays, onlyActive, minDiscountPercent, sortBy]);
 
   return {
     data,
@@ -240,6 +319,16 @@ export function useBenefits() {
     categories: [...CATEGORIES] as unknown as string[],
     selectedCategory,
     setSelectedCategory,
+    searchQuery,
+    setSearchQuery,
+    selectedDays,
+    setSelectedDays,
+    onlyActive,
+    setOnlyActive,
+    minDiscountPercent,
+    setMinDiscountPercent,
+    sortBy,
+    setSortBy,
     loading,
     error,
     refetch: load,
