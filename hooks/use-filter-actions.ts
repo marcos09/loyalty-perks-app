@@ -1,4 +1,4 @@
-import { useFilterContext } from '@/contexts/filter-context';
+import { useFilterContext } from '@/store/filter-context';
 import type { SortBy } from '@/types';
 import { useCallback } from 'react';
 

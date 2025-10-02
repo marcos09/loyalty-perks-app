@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BenefitDetailHeader } from '@/components/features/benefit-detail/header';
-import { BenefitDetailLoading } from '@/components/features/benefit-detail/loading';
-import { BenefitDetailSections } from '@/components/features/benefit-detail/sections';
 import { ErrorState } from '@/components/screens/error/error-state';
 import { ThemedText } from '@/components/shared/themed-text';
 import { useBenefitDetail } from '@/hooks/use-benefit-detail';
+import { BenefitDetailHeader } from './components/header';
+import { BenefitDetailLoading } from './components/loading';
+import { BenefitDetailSections } from './components/sections';
 import { styles } from './styles';
 
 export default function BenefitDetailScreen() {
