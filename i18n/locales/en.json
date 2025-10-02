@@ -15,7 +15,9 @@
     "expires": "Expires",
     "getBenefit": "Get benefit",
     "seeAllBenefits": "See all benefits",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "clearAll": "Clear all",
+    "loading": "Loading"
   },
   "benefits": {
     "title": "Benefits",
@@ -51,5 +53,5 @@
     "fri": "Fri",
     "sat": "Sat",
     "sun": "Sun"
-  }
+  },
 }

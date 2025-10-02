@@ -26,8 +26,8 @@ export function Skeleton({ width = '100%', height = 16, radius = 8, style }: Ske
     <Animated.View
       style={[
         {
-          width,
-          height,
+          width: width as any,
+          height: height as any,
           borderRadius: radius,
           backgroundColor: 'rgba(0,0,0,0.08)',
           opacity,

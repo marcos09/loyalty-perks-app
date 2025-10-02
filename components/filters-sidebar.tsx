@@ -20,6 +20,7 @@ interface FiltersSidebarProps {
   minDiscountPercent: number | undefined;
   onMinDiscountChange: (percent: number | undefined) => void;
   onClearAll: () => void;
+  onApply: () => void;
   sortOptions: { key: SortBy; label: string }[];
 }
 
@@ -37,6 +38,7 @@ export function FiltersSidebar({
   minDiscountPercent,
   onMinDiscountChange,
   onClearAll,
+  onApply,
   sortOptions,
 }: FiltersSidebarProps) {
   const { t } = useTranslation();
@@ -145,7 +147,11 @@ export function FiltersSidebar({
             label={t('common.clearAll')}
             selected={false}
             onPress={onClearAll}
-            style={styles.clearAllChip}
+          />
+          <FilterChip
+            label={t('common.apply')}
+            selected={true}
+            onPress={onApply}
           />
         </View>
       </ScrollView>
@@ -215,6 +221,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.08)',
+    flexDirection: 'row',
+    gap: 8,
   },
   clearAllChip: {
     backgroundColor: 'rgba(239, 68, 68, 0.1)',

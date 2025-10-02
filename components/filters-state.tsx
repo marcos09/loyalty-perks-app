@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useFilterContext } from '@/contexts/filter-context';
 import { SortBy } from '@/hooks/use-benefits';
 
 export interface FilterState {
@@ -15,27 +15,22 @@ export interface FilterState {
 }
 
 export interface FiltersStateProps {
-  filterState: FilterState;
-  onClearCategory: () => void;
-  onClearDays: () => void;
-  onClearActive: () => void;
-  onClearMinDiscount: () => void;
-  onClearSort: () => void;
-  onClearSearch: () => void;
-  onClearAll: () => void;
+  // No props needed - component manages its own state via context
 }
 
-export function FiltersState({
-  filterState,
-  onClearCategory,
-  onClearDays,
-  onClearActive,
-  onClearMinDiscount,
-  onClearSort,
-  onClearSearch,
-  onClearAll,
-}: FiltersStateProps) {
-  const { t } = useTranslation();
+export function FiltersState({}: FiltersStateProps) {
+  const {
+    appliedFilters,
+    setDraftCategory,
+    setDraftSearchQuery,
+    setDraftDays,
+    setDraftOnlyActive,
+    setDraftMinDiscountPercent,
+    setDraftSortBy,
+    setAppliedFiltersDirect,
+    clearFilters,
+  } = useFilterContext();
+
   const {
     selectedCategory,
     selectedDays,
@@ -43,15 +38,16 @@ export function FiltersState({
     minDiscountPercent,
     sortBy,
     searchQuery,
-  } = filterState;
+  } = appliedFilters;
+
 
   // Constants moved from main screen
   const SORT_OPTIONS: { key: SortBy; label: string }[] = [
-    { key: 'relevance', label: t('sortOptions.relevance') },
-    { key: 'expiresAsc', label: t('sortOptions.expiresAsc') },
-    { key: 'expiresDesc', label: t('sortOptions.expiresDesc') },
-    { key: 'discountDesc', label: t('sortOptions.discountDesc') },
-    { key: 'titleAsc', label: t('sortOptions.titleAsc') },
+    { key: 'relevance', label: 'Relevance' },
+    { key: 'expiresAsc', label: 'Expires ↑' },
+    { key: 'expiresDesc', label: 'Expires ↓' },
+    { key: 'discountDesc', label: 'Discount' },
+    { key: 'titleAsc', label: 'A-Z' },
   ];
 
   const hasAnyFilters = 
@@ -79,54 +75,72 @@ export function FiltersState({
       >
         {searchQuery.trim().length > 0 && (
           <FilterChip
-            label={`${t('common.search')}: "${searchQuery}"`}
-            onClear={onClearSearch}
+            label={`Search: "${searchQuery}"`}
+            onClear={() => {
+              setDraftSearchQuery('');
+              setAppliedFiltersDirect(prev => ({ ...prev, searchQuery: '' }));
+            }}
             type="search"
           />
         )}
         
         {selectedCategory && (
           <FilterChip
-            label={`${t('filters.categories')}: ${selectedCategory}`}
-            onClear={onClearCategory}
+            label={`Category: ${selectedCategory}`}
+            onClear={() => {
+              setDraftCategory(undefined);
+              setAppliedFiltersDirect(prev => ({ ...prev, selectedCategory: undefined }));
+            }}
             type="category"
           />
         )}
         
         {selectedDays.length > 0 && (
           <FilterChip
-            label={`${t('common.days')}: ${selectedDays.join(', ')}`}
-            onClear={onClearDays}
+            label={`Days: ${selectedDays.join(', ')}`}
+            onClear={() => {
+              setDraftDays([]);
+              setAppliedFiltersDirect(prev => ({ ...prev, selectedDays: [] }));
+            }}
             type="days"
           />
         )}
         
         {onlyActive && (
           <FilterChip
-            label={t('filters.onlyActiveChecked')}
-            onClear={onClearActive}
+            label="Active only ✓"
+            onClear={() => {
+              setDraftOnlyActive(false);
+              setAppliedFiltersDirect(prev => ({ ...prev, onlyActive: false }));
+            }}
             type="active"
           />
         )}
         
         {minDiscountPercent !== undefined && (
           <FilterChip
-            label={`${t('filters.minDiscount')}: ${minDiscountPercent}%`}
-            onClear={onClearMinDiscount}
+            label={`Min discount: ${minDiscountPercent}%`}
+            onClear={() => {
+              setDraftMinDiscountPercent(undefined);
+              setAppliedFiltersDirect(prev => ({ ...prev, minDiscountPercent: undefined }));
+            }}
             type="discount"
           />
         )}
         
         {sortBy !== 'relevance' && (
           <FilterChip
-            label={`${t('filters.sortBy')}: ${getSortLabel(sortBy)}`}
-            onClear={onClearSort}
+            label={`Sort: ${getSortLabel(sortBy)}`}
+            onClear={() => {
+              setDraftSortBy('relevance');
+              setAppliedFiltersDirect(prev => ({ ...prev, sortBy: 'relevance' }));
+            }}
             type="sort"
           />
         )}
         
-        <Pressable style={styles.clearAllBtn} onPress={onClearAll}>
-          <ThemedText style={styles.clearAllText}>{t('common.clearAll')}</ThemedText>
+        <Pressable style={styles.clearAllBtn} onPress={clearFilters}>
+          <ThemedText style={styles.clearAllText}>Clear all</ThemedText>
         </Pressable>
       </ScrollView>
     </ThemedView>

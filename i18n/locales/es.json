@@ -15,7 +15,9 @@
     "expires": "Vence",
     "getBenefit": "Obtener beneficio",
     "seeAllBenefits": "Ver todos los beneficios",
-    "clearFilters": "Limpiar filtros"
+    "clearFilters": "Limpiar filtros",
+    "clearAll": "Limpiar todo",
+    "loading": "Cargando"
   },
   "benefits": {
     "title": "Beneficios",
@@ -51,5 +53,5 @@
     "fri": "Vie",
     "sat": "Sáb",
     "sun": "Dom"
-  }
+  },
 }

@@ -36,7 +36,6 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "msw": "^2.11.3",
     "typescript": "~5.9.2"
   },
   "private": true

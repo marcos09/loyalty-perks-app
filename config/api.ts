@@ -1,6 +1,6 @@
 // API configuration
 export const API_BASE_URL = __DEV__ 
-  ? '' // For development with MSW (relative URLs)
+  ? 'http://localhost:3000' // For development with backend server
   : 'https://api.your-production-domain.com'; // For production
 
 export const API_ENDPOINTS = {

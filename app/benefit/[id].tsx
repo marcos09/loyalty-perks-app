@@ -1,5 +1,4 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,18 +8,13 @@ import { BenefitDetailSections } from '@/components/benefit-detail-sections';
 import { ErrorState } from '@/components/error-state';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useBenefits } from '@/hooks/use-benefits';
+import { useBenefit } from '@/hooks/use-benefits';
 
 export default function BenefitDetailScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
-  const { data, loading, error, refetch } = useBenefits();
-
-  const benefit = useMemo(() => {
-    if (!params?.id) return undefined;
-    return data.find((b) => b.id === String(params.id));
-  }, [data, params?.id]);
+  const { data: benefit, loading, error, refetch } = useBenefit(params?.id);
 
   return (
     <ThemedView style={{ flex: 1 }}>

@@ -1,8 +1,8 @@
 import { API_BASE_URL, API_ENDPOINTS } from '@/config/api';
 
-// Utility function to test API endpoints
+// Utility function to test backend API endpoints
 export async function testApiEndpoints() {
-  console.log('🧪 Testing API endpoints...');
+  console.log('🧪 Testing Backend API endpoints...');
   
   try {
     // Test benefits endpoint

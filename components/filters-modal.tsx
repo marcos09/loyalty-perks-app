@@ -23,6 +23,7 @@ interface FiltersModalProps {
   minDiscountPercent: number | undefined;
   onMinDiscountChange: (percent: number | undefined) => void;
   onClearAll: () => void;
+  onApply: () => void;
   sortOptions: { key: SortBy; label: string }[];
 }
 
@@ -42,6 +43,7 @@ export function FiltersModal({
   minDiscountPercent,
   onMinDiscountChange,
   onClearAll,
+  onApply,
   sortOptions,
 }: FiltersModalProps) {
   const { t } = useTranslation();
@@ -145,7 +147,7 @@ export function FiltersModal({
               >
                 <ThemedText>{t('common.clear')}</ThemedText>
               </Pressable>
-              <Pressable onPress={onClose} style={[styles.footerBtn, styles.applyBtn]}>
+              <Pressable onPress={onApply} style={[styles.footerBtn, styles.applyBtn]}>
                 <ThemedText type="defaultSemiBold">{t('common.apply')}</ThemedText>
               </Pressable>
             </View>
