@@ -17,7 +17,9 @@
     "seeAllBenefits": "Ver todos los beneficios",
     "clearFilters": "Limpiar filtros",
     "clearAll": "Limpiar todo",
-    "loading": "Cargando"
+    "loading": "Cargando",
+    "of": "de",
+    "available": "disponibles"
   },
   "benefits": {
     "title": "Beneficios",

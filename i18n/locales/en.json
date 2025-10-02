@@ -17,7 +17,9 @@
     "seeAllBenefits": "See all benefits",
     "clearFilters": "Clear filters",
     "clearAll": "Clear all",
-    "loading": "Loading"
+    "loading": "Loading",
+    "of": "of",
+    "available": "available"
   },
   "benefits": {
     "title": "Benefits",

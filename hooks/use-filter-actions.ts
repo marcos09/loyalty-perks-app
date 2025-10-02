@@ -74,5 +74,10 @@ export function useFilterActions() {
     handleApplyFilters,
     handleClearFilters,
     handleResetDraft,
+    
+    // Direct context functions
+    applyFilters,
+    clearFilters,
+    resetDraftToApplied,
   };
 }

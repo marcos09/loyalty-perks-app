@@ -1,27 +1,23 @@
 import { useBenefitsData } from '@/hooks/use-benefits-data';
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import { analyzeApiError } from '@/utils/error-handler';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { BenefitsList } from '../benefits/BenefitsList';
 import { LoadingSkeleton } from '../benefits/LoadingSkeleton';
-import { Screen } from '../layout/Screen';
-import { BenefitsContent } from './BenefitsContent';
+import { FiltersModal } from '../filters/FiltersModal';
+import { FiltersState } from '../filters/FiltersState';
+import { ThemedView } from '../themed-view';
+import { BenefitsHeader } from './BenefitsHeader';
 import { ErrorState } from './ErrorState';
 
 export function BenefitsScreen() {
   const { benefits, loading, error, refetch } = useBenefitsData();
-  const { handleClearFilters } = useFilterActions();
+  const { handleClearFilters, applyFilters, resetDraftToApplied } = useFilterActions();
   const previousErrorRef = useRef<unknown>(null);
+  const [filtersModalVisible, setFiltersModalVisible] = useState(false);
 
   useEffect(() => {
     if (error && error !== previousErrorRef.current) {
-      const errorInfo = analyzeApiError(error);
-      if (__DEV__) {
-        console.log('API error detected:', {
-          error,
-          errorInfo,
-          shouldResetFilters: errorInfo.shouldResetFilters,
-        });
-      }
       previousErrorRef.current = error;
     }
   }, [error]);
@@ -30,29 +26,54 @@ export function BenefitsScreen() {
     refetch();
   };
 
+  const handleOpenFilters = () => {
+    setFiltersModalVisible(true);
+  };
+
+  const handleCloseFilters = () => {
+    try {
+      setFiltersModalVisible(false);
+      resetDraftToApplied();
+    } catch (error) {
+      console.error('Error closing filters modal:', error);
+      setFiltersModalVisible(false);
+    }
+  };
+
+  const handleApplyFilters = () => {
+    try {
+      applyFilters();
+      setFiltersModalVisible(false);
+    } catch (error) {
+      console.error('Error applying filters:', error);
+      setFiltersModalVisible(false);
+    }
+  };
+
+  const handleClearAllFilters = () => {
+    try {
+      handleClearFilters();
+      setFiltersModalVisible(false);
+    } catch (error) {
+      console.error('Error clearing filters:', error);
+      setFiltersModalVisible(false);
+    }
+  };
+
   if (loading && benefits.length === 0) {
     return (
-      <Screen>
+      <ThemedView style={{ flex: 1 }}>
         <LoadingSkeleton />
-      </Screen>
+      </ThemedView>
     );
   }
 
   if (error) {
     const errorInfo = analyzeApiError(error);
     
-    if (__DEV__) {
-      console.log('Error detected in BenefitsScreen:', {
-        error,
-        errorInfo,
-        statusCode: errorInfo.statusCode,
-        isRetryable: errorInfo.isRetryable,
-        shouldResetFilters: errorInfo.shouldResetFilters,
-      });
-    }
     
     return (
-      <Screen>
+      <ThemedView style={{ flex: 1 }}>
         <ErrorState 
           error={error} 
           onRetry={errorInfo.isRetryable ? handleErrorRetry : () => {}}
@@ -62,13 +83,22 @@ export function BenefitsScreen() {
           onResetFilters={handleClearFilters}
           showResetFilters={errorInfo.shouldResetFilters}
         />
-      </Screen>
+      </ThemedView>
     );
   }
 
   return (
-    <Screen>
-      <BenefitsContent />
-    </Screen>
+    <ThemedView style={{ flex: 1 }}>
+      <BenefitsHeader onOpenFilters={handleOpenFilters} />
+      <FiltersState />
+      <BenefitsList onClearFilters={handleClearFilters} />
+      
+      <FiltersModal
+        visible={filtersModalVisible}
+        onClose={handleCloseFilters}
+        onApply={handleApplyFilters}
+        onClear={handleClearAllFilters}
+      />
+    </ThemedView>
   );
 }

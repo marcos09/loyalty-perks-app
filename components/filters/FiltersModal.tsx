@@ -2,8 +2,8 @@ import { useCategories } from '@/hooks/api';
 import { useFilterActions } from '@/hooks/use-filter-actions';
 import type { SortBy } from '@/types';
 import { useTranslation } from 'react-i18next';
-import { Modal, ScrollView, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Modal, Platform, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Container } from '../layout/Container';
 import { ThemedText } from '../themed-text';
 import { ThemedView } from '../themed-view';
@@ -27,6 +27,7 @@ export function FiltersModal({
 }: FiltersModalProps) {
   const { t } = useTranslation();
   const { data: categories = [] } = useCategories();
+  const insets = useSafeAreaInsets();
   const {
     draftFilters,
     handleCategoryChange,
@@ -54,9 +55,13 @@ export function FiltersModal({
   ];
 
   return (
-    <Modal visible={visible} animationType="slide">
-      <SafeAreaView style={{ flex: 1 }}>
-        <ThemedView style={{ flex: 1 }}>
+    <Modal 
+      visible={visible} 
+      animationType="slide"
+      presentationStyle="pageSheet"
+    >
+      <SafeAreaView style={[styles.safeArea, { paddingTop: insets.top }]}>
+        <ThemedView style={styles.container}>
           <Container 
             direction="row" 
             justify="space-between" 
@@ -159,11 +164,22 @@ export function FiltersModal({
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    minHeight: '100%',
+  },
   header: {
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.08)',
+    minHeight: 60,
   },
   footer: {
     marginTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 16, // Extra padding for home indicator
   },
 });
